@@ -17,6 +17,13 @@
 		D82796BE1C8B0C2F00D08789 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D82796BD1C8B0C2F00D08789 /* CardView.swift */; };
 		D8279CFB1C8B0C7800D08789 /* photos in Resources */ = {isa = PBXBuildFile; fileRef = D8279CFA1C8B0C7800D08789 /* photos */; };
 		D8279CFD1C8B0C9A00D08789 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D8279CFC1C8B0C9A00D08789 /* Assets.xcassets */; };
+		D8282E5A1C8DB5A00007DC2B /* PrintCards.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D8282E591C8DB5A00007DC2B /* PrintCards.storyboard */; };
+		D8282E611C8DBD190007DC2B /* PrintCardsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8282E601C8DBD190007DC2B /* PrintCardsView.swift */; };
+		D8282E631C8DBD380007DC2B /* PrintCardsWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8282E621C8DBD380007DC2B /* PrintCardsWindowController.swift */; };
+		D8282E651C8DBDF40007DC2B /* PrintCardsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8282E641C8DBDF40007DC2B /* PrintCardsViewController.swift */; };
+		D8282E671C8DC1120007DC2B /* MainWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8282E661C8DC1120007DC2B /* MainWindowController.swift */; };
+		D8282E6F1C8F22830007DC2B /* Member.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8282E6E1C8F22830007DC2B /* Member.swift */; };
+		D8B173BB1C8BA300000F43F8 /* SplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8B173BA1C8BA300000F43F8 /* SplitViewController.swift */; };
 		D8D238371C8B0CE60039F85B /* SQLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D82796AE1C8B0BE100D08789 /* SQLite.framework */; };
 		D8D2383A1C8B0D490039F85B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D8D2383C1C8B0D490039F85B /* Main.storyboard */; };
 		D8D2383E1C8B0DBF0039F85B /* PCSC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8D2383D1C8B0DBF0039F85B /* PCSC.framework */; };
@@ -112,6 +119,13 @@
 		D82796BD1C8B0C2F00D08789 /* CardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		D8279CFA1C8B0C7800D08789 /* photos */ = {isa = PBXFileReference; lastKnownFileType = folder; path = photos; sourceTree = "<group>"; };
 		D8279CFC1C8B0C9A00D08789 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		D8282E591C8DB5A00007DC2B /* PrintCards.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = PrintCards.storyboard; sourceTree = "<group>"; };
+		D8282E601C8DBD190007DC2B /* PrintCardsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrintCardsView.swift; sourceTree = "<group>"; };
+		D8282E621C8DBD380007DC2B /* PrintCardsWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrintCardsWindowController.swift; sourceTree = "<group>"; };
+		D8282E641C8DBDF40007DC2B /* PrintCardsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrintCardsViewController.swift; sourceTree = "<group>"; };
+		D8282E661C8DC1120007DC2B /* MainWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainWindowController.swift; sourceTree = "<group>"; };
+		D8282E6E1C8F22830007DC2B /* Member.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Member.swift; sourceTree = "<group>"; };
+		D8B173BA1C8BA300000F43F8 /* SplitViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SplitViewController.swift; sourceTree = "<group>"; };
 		D8D2383B1C8B0D490039F85B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		D8D2383D1C8B0DBF0039F85B /* PCSC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PCSC.framework; path = System/Library/Frameworks/PCSC.framework; sourceTree = SDKROOT; };
 		D8D238411C8B0E350039F85B /* SVSC-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SVSC-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -174,22 +188,18 @@
 			isa = PBXGroup;
 			children = (
 				D82796751C8B0BD900D08789 /* AppDelegate.swift */,
-				D8D238451C8B142F0039F85B /* CardReader.swift */,
-				D82796B51C8B0C1A00D08789 /* MemberListController.swift */,
-				D8D2384A1C8B5BF60039F85B /* QueryListController.swift */,
-				D8D2384C1C8B5C5E0039F85B /* MemberDetailController.swift */,
-				D82796B61C8B0C1A00D08789 /* Database.swift */,
-				D82796B71C8B0C1A00D08789 /* DatabaseTypes.swift */,
-				D82796BB1C8B0C2800D08789 /* Group.swift */,
+				D8282E6A1C8DCE030007DC2B /* Database */,
+				D8282E691C8DCDE00007DC2B /* Main Window */,
+				D8282E681C8DCDCD0007DC2B /* Print Cards Window */,
+				D8282E6B1C8DCE180007DC2B /* Utilities */,
 				D82796BD1C8B0C2F00D08789 /* CardView.swift */,
-				D8D2384E1C8B64840039F85B /* WildApricotManager.swift */,
-				D827967E1C8B0BD900D08789 /* Info.plist */,
-				D82796A01C8B0BE100D08789 /* SQLite.xcodeproj */,
+				D8D238501C8B84F60039F85B /* CredentialView.swift */,
 				D8D2383C1C8B0D490039F85B /* Main.storyboard */,
+				D8282E591C8DB5A00007DC2B /* PrintCards.storyboard */,
 				D8D238401C8B0DD30039F85B /* Assets */,
 				D8D2383F1C8B0DC70039F85B /* Frameworks */,
-				D8D238411C8B0E350039F85B /* SVSC-Bridging-Header.h */,
-				D8D238501C8B84F60039F85B /* CredentialView.swift */,
+				D8282E6D1C8DCE4C0007DC2B /* Support Files */,
+				D8282E6C1C8DCE350007DC2B /* Subprojects */,
 			);
 			path = SVSC;
 			sourceTree = "<group>";
@@ -223,6 +233,65 @@
 				D82796B41C8B0BE100D08789 /* SQLiteTests tvOS.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		D8282E681C8DCDCD0007DC2B /* Print Cards Window */ = {
+			isa = PBXGroup;
+			children = (
+				D8282E621C8DBD380007DC2B /* PrintCardsWindowController.swift */,
+				D8282E641C8DBDF40007DC2B /* PrintCardsViewController.swift */,
+				D8282E601C8DBD190007DC2B /* PrintCardsView.swift */,
+			);
+			name = "Print Cards Window";
+			sourceTree = "<group>";
+		};
+		D8282E691C8DCDE00007DC2B /* Main Window */ = {
+			isa = PBXGroup;
+			children = (
+				D8282E661C8DC1120007DC2B /* MainWindowController.swift */,
+				D82796B51C8B0C1A00D08789 /* MemberListController.swift */,
+				D8B173BA1C8BA300000F43F8 /* SplitViewController.swift */,
+				D8D2384A1C8B5BF60039F85B /* QueryListController.swift */,
+				D8D2384C1C8B5C5E0039F85B /* MemberDetailController.swift */,
+			);
+			name = "Main Window";
+			sourceTree = "<group>";
+		};
+		D8282E6A1C8DCE030007DC2B /* Database */ = {
+			isa = PBXGroup;
+			children = (
+				D82796B61C8B0C1A00D08789 /* Database.swift */,
+				D82796B71C8B0C1A00D08789 /* DatabaseTypes.swift */,
+				D8282E6E1C8F22830007DC2B /* Member.swift */,
+			);
+			name = Database;
+			sourceTree = "<group>";
+		};
+		D8282E6B1C8DCE180007DC2B /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				D8D238451C8B142F0039F85B /* CardReader.swift */,
+				D82796BB1C8B0C2800D08789 /* Group.swift */,
+				D8D2384E1C8B64840039F85B /* WildApricotManager.swift */,
+			);
+			name = Utilities;
+			sourceTree = "<group>";
+		};
+		D8282E6C1C8DCE350007DC2B /* Subprojects */ = {
+			isa = PBXGroup;
+			children = (
+				D82796A01C8B0BE100D08789 /* SQLite.xcodeproj */,
+			);
+			name = Subprojects;
+			sourceTree = "<group>";
+		};
+		D8282E6D1C8DCE4C0007DC2B /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				D827967E1C8B0BD900D08789 /* Info.plist */,
+				D8D238411C8B0E350039F85B /* SVSC-Bridging-Header.h */,
+			);
+			name = "Support Files";
 			sourceTree = "<group>";
 		};
 		D8D2383F1C8B0DC70039F85B /* Frameworks */ = {
@@ -401,6 +470,7 @@
 			files = (
 				D8D2383A1C8B0D490039F85B /* Main.storyboard in Resources */,
 				D8D238491C8B23CC0039F85B /* R03 09 - ALERT01 - Synths Massive_A.wav in Resources */,
+				D8282E5A1C8DB5A00007DC2B /* PrintCards.storyboard in Resources */,
 				D8279CFD1C8B0C9A00D08789 /* Assets.xcassets in Resources */,
 				D8279CFB1C8B0C7800D08789 /* photos in Resources */,
 			);
@@ -433,11 +503,17 @@
 				D8D2384B1C8B5BF60039F85B /* QueryListController.swift in Sources */,
 				D82796B91C8B0C1A00D08789 /* Database.swift in Sources */,
 				D82796B81C8B0C1A00D08789 /* MemberListController.swift in Sources */,
+				D8282E671C8DC1120007DC2B /* MainWindowController.swift in Sources */,
+				D8282E6F1C8F22830007DC2B /* Member.swift in Sources */,
+				D8282E631C8DBD380007DC2B /* PrintCardsWindowController.swift in Sources */,
 				D8D238461C8B142F0039F85B /* CardReader.swift in Sources */,
 				D82796BC1C8B0C2800D08789 /* Group.swift in Sources */,
 				D82796BE1C8B0C2F00D08789 /* CardView.swift in Sources */,
 				D82796761C8B0BD900D08789 /* AppDelegate.swift in Sources */,
+				D8282E651C8DBDF40007DC2B /* PrintCardsViewController.swift in Sources */,
+				D8282E611C8DBD190007DC2B /* PrintCardsView.swift in Sources */,
 				D8D238511C8B84F60039F85B /* CredentialView.swift in Sources */,
+				D8B173BB1C8BA300000F43F8 /* SplitViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

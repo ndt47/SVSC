@@ -8,14 +8,6 @@
 
 import Foundation
 
-typealias Member = (
-    contact: Contact,
-    membership: Membership?,
-    sponsor: Sponsor?,
-    nra: NRAMembership?,
-    notes: Note?
-)
-
 typealias Edit = (
     previous: Member,
     new: Member,
@@ -73,6 +65,54 @@ enum MembershipType: String {
     case Seaside = "Seaside Company Security"
     case Disabled_Veteran = "Disabled Veteran"
     case TEST = "TEST - FAKE MEMBERS FOR ADMIN TESTING"
+    
+    func shortName() -> String? {
+        switch self {
+        case .Regular, .Regular_Service:
+            return "Regular"
+        case .Youth:
+            return "Youth"
+        case .Probationary:
+            return "Probationary"
+        case .Youth_Probationary:
+            return "Youth Probationary"
+        case .Life:
+            return "Life"
+        case .SVPD:
+            return "SVPD"
+        case .Seaside:
+            return "Seaside"
+        case .Disabled_Veteran:
+            return "Veteran"
+        case .Senior:
+            return "Senior"
+        case .Applicant:
+            return "Applicant"
+        default:
+            return nil
+        }
+    }
+    func className() -> String? {
+        switch self {
+        case .Regular, .Regular_Service, .Probationary, Applicant:
+            return "Regular"
+        case .Youth, .Youth_Probationary:
+            return "Youth"
+        case .Life:
+            return "Life"
+        case .SVPD:
+            return "SVPD"
+        case .Seaside:
+            return "Seaside"
+        case .Disabled_Veteran:
+            return "Veteran"
+        case .Senior:
+            return "Senior"
+        default:
+            return nil
+        }
+    }
+
 }
 
 enum MembershipStatus: String {
@@ -137,5 +177,26 @@ typealias MembershipLevel = (
     id: Int,
     type: MembershipType,
     url: String
+)
+
+typealias Registration = (
+    contact_id: Int,
+    date: NSDate,
+    location: String,
+    event: Event?
+)
+
+typealias GroupParticipation = (
+    contact_id: Int,
+    name: String,
+    id: Int
+)
+
+typealias Event = (
+    id: Int,
+    name: String,
+    descriptions: String,
+    start: NSDate,
+    end: NSDate?
 )
 

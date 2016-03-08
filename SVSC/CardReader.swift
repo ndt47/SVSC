@@ -132,6 +132,7 @@ class CardManager {
                     foundCard(card: card)
                 })
             }
+        
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(1.5 * Double(NSEC_PER_SEC))), self.queue, { () -> Void in
                 self.readProxCards(foundCard)
             })

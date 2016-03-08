@@ -32,6 +32,7 @@ class WildApricotManager : NSObject, NSURLSessionDelegate {
                 group.enter({ (done) -> Void in
                     let task = session.dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
                         guard let _ = data else {
+                            done()
                             return
                         }
                         
@@ -51,75 +52,79 @@ class WildApricotManager : NSObject, NSURLSessionDelegate {
                     task.resume()
                 })
                 group.wait()
+                
             }
         }
     }
 
     func downloadMembers(completion: ((json: [String: AnyObject]?) -> Void)) -> Void {
-        let session = NSURLSession(configuration: configuration, delegate: self, delegateQueue: nil)
-
-        guard let url = NSURL(string: "https://api.wildapricot.org/v2/accounts/187035/contacts") else {
-            return
-        }
-        let request = NSMutableURLRequest(URL: url)
-        var resultURL: NSURL? = nil
-        
-        let group = Group()
-        group.enter({ (done) -> Void in
-            let task = session.dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
-                guard let _ = data else {
-                    return
-                }
-                
-                if let dict = try? NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions(rawValue: 0)) as? [String: AnyObject] {
-                    print("\(dict)")
-                    if let r = dict!["ResultUrl"] as? String {
-                        resultURL = NSURL(string: r)
-                    }
-                }
-                done()
-            })
-            task.resume()
-        })
-        group.wait()
-        
-        guard let newURL = resultURL else {
-            return
-        }
-        
-        func checkForResult(url: NSURL, session: NSURLSession, completion: ((json: [String : AnyObject]) -> Void)!) -> Void {
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(UInt64(5)*NSEC_PER_SEC)), self.queue, { () -> Void in
-                let request = NSMutableURLRequest(URL: url)
+        dispatch_async(self.queue) { () -> Void in
+            let group = Group()
+            let session = NSURLSession(configuration: self.configuration, delegate: self, delegateQueue: nil)
+            
+            guard let url = NSURL(string: "https://api.wildapricot.org/v2/accounts/187035/contacts") else {
+                return
+            }
+            let request = NSMutableURLRequest(URL: url)
+            var resultURL: NSURL? = nil
+            
+            group.enter({ (done) -> Void in
                 let task = session.dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
                     guard let _ = data else {
+                        done()
                         return
                     }
                     
-                    guard let dict = try? NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions(rawValue: 0)) as! [String: AnyObject] else {
-                        return
+                    if let dict = try? NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions(rawValue: 0)) as? [String: AnyObject] {
+                        print("\(dict)")
+                        if let r = dict!["ResultUrl"] as? String {
+                            resultURL = NSURL(string: r)
+                        }
                     }
-                    
-                    guard let _ = dict["Contacts"] else {
-                        checkForResult(url, session: session, completion: completion)
-                        return
-                    }
-                    
-                    completion(json: dict)
+                    done()
                 })
                 task.resume()
             })
-        }
-        
-        var result: [String : AnyObject]? = nil
-        group.enter({ (done) -> Void in
-            checkForResult(newURL, session: session, completion: { (json) -> Void in
-                result = json
-                done()
+            group.wait()
+            
+            guard let newURL = resultURL else {
+                return
+            }
+            
+            func checkForResult(url: NSURL, session: NSURLSession, completion: ((json: [String : AnyObject]) -> Void)!) -> Void {
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(UInt64(5)*NSEC_PER_SEC)), self.queue, { () -> Void in
+                    let request = NSMutableURLRequest(URL: url)
+                    let task = session.dataTaskWithRequest(request, completionHandler: { (data, response, error) -> Void in
+                        guard let _ = data else {
+                            return
+                        }
+                        
+                        guard let dict = try? NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions(rawValue: 0)) as! [String: AnyObject] else {
+                            return
+                        }
+                        
+                        guard let _ = dict["Contacts"] else {
+                            checkForResult(url, session: session, completion: completion)
+                            return
+                        }
+                        
+                        completion(json: dict)
+                    })
+                    task.resume()
+                })
+            }
+            
+            var result: [String : AnyObject]? = nil
+            group.enter({ (done) -> Void in
+                checkForResult(newURL, session: session, completion: { (json) -> Void in
+                    result = json
+                    done()
+                })
             })
-        })
-        group.notify({ () -> Void in
-            completion(json: result)
-        })
+            group.notify({ () -> Void in
+                completion(json: result)
+            })
+        }
     }
 
     func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didReceiveResponse response: NSURLResponse, completionHandler: (NSURLSessionResponseDisposition) -> Void) {

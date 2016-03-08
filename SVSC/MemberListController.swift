@@ -21,29 +21,44 @@ extension String {
 class MemberListController: NSViewController, NSURLSessionDelegate, NSURLSessionDataDelegate, NSTableViewDelegate, NSTableViewDataSource {
     
     @IBOutlet weak var tableView: NSTableView?
+    @IBOutlet weak var cardView: CardView?
     
-    var resultSet: [Member]?
+    var members = [Member]()
     private let cardManager = CardManager()
-    
-    let db = try? Database(path: "members.db")
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        guard let db = self.db else {
-            print("failed to open database")
-            return
-        }
-        
-        resultSet = db.allMembers()
         tableView?.reloadData()
         
+        let tv = self.tableView!
+        weak var wSelf = self
         cardManager?.readProxCards({ (card) -> Void in
-            let sound = NSSound(named: "R03 09 - ALERT01 - Synths Massive_A")
-            sound?.play()
-            print("Gate card: \(card)")
+            var idx = 0
+            var foundMember: Member? = nil
+
+            if let this = wSelf {
+                for member in this.members {
+                    if member.membership?.gate_card == card {
+                        foundMember = member
+                        break
+                    }
+                    idx++
+                }
+            }
+            
+            Swift.print("Gate card: \(card)")
+            if let fm = foundMember {
+                tv.selectRowIndexes(NSIndexSet(index: idx), byExtendingSelection: false)
+                tv.scrollRowToVisible(idx)
+                NSNotificationCenter.defaultCenter().postNotificationName("SelectedMembersDidChange", object: nil, userInfo: ["selectedMembers" : [fm]])
+                let sound = NSSound(named: "R03 09 - ALERT01 - Synths Massive_A")
+                sound?.play()
+            }
+
         })
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "membersListDidChange:", name: "MembersQueryDidChange", object: nil)
     }
     
     func generateBadges() {
@@ -71,46 +86,109 @@ class MemberListController: NSViewController, NSURLSessionDelegate, NSURLSession
     }
     
     func numberOfRowsInTableView(tableView: NSTableView) -> Int {
-        guard let rows = resultSet else {
-            return 0
-        }
-        return rows.count
+        return members.count
     }
     
     func tableView(tableView: NSTableView, objectValueForTableColumn tableColumn: NSTableColumn?, row: Int) -> AnyObject? {
-        guard let rows = resultSet else {
-            return nil
-        }
-        let member = rows[row]
+        let member = members[row]
         if let column = tableColumn  {
-            switch column.identifier {
-            case "first_name":
-                return member.contact.first_name.capitalizedString
-            case "last_name":
-                return member.contact.last_name.capitalizedString
-            case "preferred_name":
-                return member.contact.preferred_name?.capitalizedString
-            case "email":
-                return member.contact.email.lowercaseString
-            case "member_id":
-                return member.membership?.member_id
-            case "member_level":
-                return member.membership?.level.type.rawValue
-            case "gate_card":
-                return member.membership?.gate_card
-            case "gate_status":
-                return member.membership?.gate_status?.rawValue
-            default:
-                return nil
-            }
+            return member.valueForKey(column.identifier)
         }
         return nil
     }
     
     func tableView(tableView: NSTableView, sortDescriptorsDidChange oldDescriptors: [NSSortDescriptor]) {
-        guard let _ = resultSet else {
-            return
+        let newDescriptors = tableView.sortDescriptors
+     
+        if let sortedMembers = NSArray(array: members).sortedArrayUsingDescriptors(newDescriptors) as? [Member] {
+            members = sortedMembers
+            tableView.reloadData()
         }
     }
     
+    func tableView(tableView: NSTableView, selectionIndexesForProposedSelection proposedSelectionIndexes: NSIndexSet) -> NSIndexSet {
+        return proposedSelectionIndexes
+    }
+    
+    func tableView(tableView: NSTableView, shouldSelectRow row: Int) -> Bool {
+        return true
+    }
+    
+    func tableView(tableView: NSTableView, shouldSelectTableColumn tableColumn: NSTableColumn?) -> Bool {
+        return false
+    }
+    
+    func tableViewSelectionDidChange(notification: NSNotification) {
+        NSNotificationCenter.defaultCenter().postNotificationName("SelectedMembersDidChange", object: nil, userInfo: ["selectedMembers" : self.selectedMembers])
+    }
+    
+    func membersListDidChange(note: NSNotification) -> Void {
+        guard let info = note.userInfo else {
+            return
+        }
+        if let newMembers = info["members"] as? [Member] {
+            self.members = newMembers
+            tableView?.reloadData()
+        }
+    }
+    
+    var selectedMembers: [Member] {
+        get {
+            var selectedMembers = [Member]()
+            if let tv = self.tableView {
+                let indexes = tv.selectedRowIndexes
+                indexes.enumerateIndexesUsingBlock({ (i, _) -> Void in
+                    selectedMembers.append(self.members[i])
+                })
+            }
+            return selectedMembers
+        }
+    }
+
+    @IBAction func showBadgesWindow(sender: AnyObject?) -> Void {
+        Swift.print("show badges window")
+    }
+    
+    @IBAction func printBadges(sender: AnyObject?) -> Void {
+        let printInfo = NSPrintInfo.sharedPrintInfo()
+        let dpi = PrintCardsView.dpi
+        
+        printInfo.paperSize = NSSize(width: dpi * 8.5, height: dpi * 11)
+        printInfo.orientation = .Landscape
+        printInfo.leftMargin = dpi * 0.75
+        printInfo.rightMargin = dpi * 0.75
+        printInfo.topMargin = dpi * 0.5
+        printInfo.bottomMargin = dpi * 0.5
+        printInfo.verticallyCentered = true
+        printInfo.horizontallyCentered = true
+
+        let view = PrintCardsView(members: self.selectedMembers)
+        let printOp = NSPrintOperation(view: view, printInfo: printInfo)
+        printOp.runOperation()
+    }
+    
+    override func prepareForSegue(segue: NSStoryboardSegue, sender: AnyObject?) {
+        guard let identifier = segue.identifier else {
+            return
+        }
+        switch identifier {
+        case "showBadgesWindow":
+            if let vc = segue.destinationController as? PrintCardsWindowController {
+                vc.members = selectedMembers
+            }
+            break
+        default:
+            break
+        }
+    }
+    
+    override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
+        switch identifier {
+        case "showBadgesWindow":
+            return selectedMembers.count > 0
+        default:
+            return true
+        }
+    }
 }
+

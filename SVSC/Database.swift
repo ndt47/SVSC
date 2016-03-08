@@ -425,26 +425,70 @@ class LevelsTable : DatabaseTable {
     }
 }
 
+class GroupsTable : DatabaseTable {
+    typealias T = GroupParticipation
+    
+    static let TABLE_NAME = "groups"
+    let table = Table(TABLE_NAME)
+    
+    let id = Expression<Int>("id")
+    let contact_id = Expression<Int>("contact_id")
+    let name = Expression<String>("name")
+    
+    func create(db: Connection) throws {
+        do {
+            try db.run( table.create(block: { (t) -> Void in
+                t.column(contact_id)
+                t.column(id)
+                t.column(name)
+            }))
+        } catch _ {}
+    }
+    
+    func insert(db: Connection, item: T) throws -> Int64 {
+        let insert = table.insert(contact_id <- item.contact_id, id <- item.id, name <- item.name)
+        do {
+            let row = try db.run(insert)
+            guard row > 0 else {
+                throw DataBaseError.InsertError
+            }
+            return row
+        } catch _ {}
+        return 0
+    }
+    
+    func delete(db: Connection, item: T) throws {
+        
+    }
+    
+    func findAll(db: Connection) throws -> [T]? {
+        if let items = try? db.prepare(table) {
+            var results = [T]()
+            
+            for item in items {
+                let r = T(contact_id: item[contact_id], id: item[id], name: item[name])
+                results.append(r)
+            }
+            return results
+        }
+        return nil
+    }
+}
+
 class Database {
     
     let db: Connection?
-    let contacts: ContactsTable
-    let levels: LevelsTable
-    let members: MembershipTable
-    let nra: NRAMembershipTable
-    let notes: NotesTable
-    let sponsors: SponsorTable
+    let contacts = ContactsTable()
+    let levels = LevelsTable()
+    let members = MembershipTable()
+    let nra = NRAMembershipTable()
+    let notes = NotesTable()
+    let sponsors = SponsorTable()
+    let groups =  GroupsTable()
     
     init(path: String) throws {
         db = try? Connection("members.db")
         
-        contacts = ContactsTable()
-        levels = LevelsTable()
-        members = MembershipTable()
-        nra = NRAMembershipTable()
-        notes = NotesTable()
-        sponsors = SponsorTable()
-
         do {
             try self.updateSchema()
         }
@@ -462,150 +506,25 @@ class Database {
             try nra.create(db)
             try notes.create(db)
             try sponsors.create(db)
+            try groups.create(db)
         }
         catch _ {}
     }
 
-    private func sponsorForRow(row: SQLite.Row) -> Sponsor? {
-        let contact_id = row[sponsors.table[sponsors.contact_id]]
-        
-        guard let db = self.db else {
-            return nil
-        }
-
-        if let id = row[sponsors.table[sponsors.id]] {
-            let query = contacts.table.join(members.table, on: contacts.table[contacts.id] == members.table[members.contact_id]).select(contacts.first_name, contacts.last_name, contacts.email).filter(members.table[members.member_id] == id).limit(1)
-            if let r = db.pluck(query) {
-                return Sponsor(
-                    contact_id: contact_id,
-                    id: id,
-                    name: "\(r[contacts.first_name]) \(r[contacts.last_name])",
-                    email: r[contacts.email]
-                )
-            }
-        }
-        if let email = row[sponsors.table[sponsors.email]] {
-            let query = contacts.table.join(members.table, on: contacts.table[contacts.id] == members.table[members.contact_id]).select(contacts.first_name, contacts.last_name, members.member_id).filter(contacts.table[contacts.email].lowercaseString.like(email.lowercaseString)).limit(1)
-            if let r = db.pluck(query) {
-                if let id = r[members.member_id] {
-                    return Sponsor(
-                        contact_id: contact_id,
-                        id: id,
-                        name: "\(r[contacts.first_name]) \(r[contacts.last_name])",
-                        email: email
-                    )
-                }
-            }
-        }
-        if let name = row[sponsors.table[sponsors.name]] {
-            let components = name.uppercaseString.componentsSeparatedByString(" ")
-            if let first = components.first, let last = components.last {
-                let query = contacts.table.join(members.table, on: contacts.table[contacts.id] == members.table[members.contact_id]).select(contacts.first_name, contacts.last_name, contacts.email, members.member_id).filter((contacts.table[contacts.first_name].uppercaseString.like(first) || contacts.table[contacts.preferred_name].uppercaseString.like(first)) && contacts.table[contacts.last_name].uppercaseString.like(last)).limit(1)
-                if let r = db.pluck(query) {
-                    if let id = r[members.member_id] {
-                        return Sponsor(
-                            contact_id: contact_id,
-                            id: id,
-                            name: "\(r[contacts.first_name]) \(r[contacts.last_name])",
-                            email: r[contacts.email]
-                        )
-                    }
-                }
-            }
-        }
-        return nil
-    }
-    
-    private func membershipForRow(row: SQLite.Row) -> Membership? {
-        guard row[members.level] > 0 else {
-            return nil
-        }
-        let level = MembershipLevel(
-            id: row[levels.table[levels.id]],
-            type: MembershipType(rawValue: row[levels.type])!,
-            url: row[levels.url]
-        )
-        var mem_status: MembershipStatus? = nil
-        if let ms = row[members.status] {
-            mem_status = MembershipStatus(rawValue: ms)
-        }
-        var gate_status: GateStatus? = nil
-        if let gs = row[members.gate_status] {
-            gate_status = GateStatus(rawValue: gs)
-        }
-        var holster_rating: HolsterRating? = nil
-        if let hr = row[members.holster] {
-            holster_rating = HolsterRating(rawValue: hr)
-        }
-        var dist_method: DistributionMethod? = nil
-        if let dm = row[members.perm_id_dist_method] {
-            dist_method = DistributionMethod(rawValue: dm)
-        }
-        
-        return Membership(
-            contact_id: row[members.table[members.contact_id]],
-            member_id: row[members.member_id],
-            level: level,
-            status: mem_status,
-            change_date: row[members.change_date],
-            gate_card: row[members.gate_card],
-            gate_status: gate_status,
-            holster: holster_rating,
-            application_date: row[members.application_date],
-            membership_date: row[members.membership_date],
-            orientation_date: row[members.orientation_date],
-            perm_id_dist_date: row[members.perm_id_dist_date],
-            perm_id_dist_method: dist_method,
-            prob_id_dist_date: row[members.prob_id_dist_date],
-            meeting1: row[members.meeting1],
-            meeting2: row[members.meeting2],
-            meeting3: row[members.meeting3],
-            prob_exp_date: row[members.prob_exp_date]
-        )
-    }
-    
-    private func nraMembershipForRow(row: SQLite.Row) -> NRAMembership? {
-        let contact_id = row[nra.table[nra.contact_id]]
-        guard contact_id > 0 else {
-            return nil
-        }
-        let nra_id = row[nra.table[nra.id]]
-        guard nra_id.characters.count > 0 else {
-            return nil
-        }
-        return NRAMembership(
-            contact_id: contact_id,
-            id: nra_id,
-            exp_date: row[nra.exp_date]
-        )
-    }
-    
-    private func notesForRow(row: SQLite.Row) -> Note? {
-        let contact_id = row[notes.table[notes.contact_id]]
-        guard contact_id > 0 else {
-            return nil
-        }
-        let text = row[notes.text]
-        guard text.characters.count > 0 else {
-            return nil
-        }
-        
-        return Note(
-            contact_id: contact_id,
-            text: text,
-            date: nil
-        )
-    }
-
-    func allMembers() -> [Member] {
-        
-        let query = contacts.table.join(members.table, on: contacts.table[contacts.id] == members.table[members.contact_id]).join(levels.table, on: members.table[members.level] == levels.table[levels.id]).join(nra.table, on: nra.table[nra.contact_id] == contacts.table[contacts.id]).join(sponsors.table, on: sponsors.table[sponsors.contact_id] == contacts.table[contacts.id]).join(notes.table, on: notes.table[notes.contact_id] == contacts.table[contacts.id]).select(contacts.table[*], members.table[*], levels.table[*], nra.table[*], sponsors.table[*], notes.table[*]).order(contacts.table[contacts.first_name]).order(contacts.table[contacts.last_name])
-        
+    func membersForQuery(query: QueryType) -> [Member] {
         guard let db = self.db else {
             return []
         }
-
-        if let rows = try? db.prepare(query) {
+        
+        var results: AnySequence<Row>? = nil
+        do {
+            results = try db.prepare(query)
+        }
+        catch let e {
+            print("\(e)")
+        }
+        
+        if let rows = results {
             var results = [Member]()
             for row in rows {
                 var gender: Gender? = nil
@@ -613,7 +532,7 @@ class Database {
                     gender = Gender(rawValue: g)
                 }
                 let contact = Contact(
-                    id: row[contacts.table[contacts.id]],
+                    id: row[contacts.id],
                     first_name: row[contacts.first_name],
                     middle_name: row[contacts.middle_name],
                     last_name: row[contacts.last_name],
@@ -632,19 +551,21 @@ class Database {
                     gender: gender
                 )
                 
-                let member = Member(
-                    contact: contact,
-                    membership: membershipForRow(row),
-                    sponsor: sponsorForRow(row),
-                    nra: nraMembershipForRow(row),
-                    notes: notesForRow(row)
-                )
-                results.append(member)
+                results.append(Member(db: self, contact: contact))
             }
             return results
         }
         
         return []
+    }
+    
+    func allMembers() -> [Member] {
+        let query = contacts.table
+            .join(members.table, on: contacts.table[contacts.id] == members.table[members.contact_id])
+            .order(contacts.first_name)
+            .order(contacts.last_name)
+        
+        return self.membersForQuery(query)
     }
 
     func importMembers(fromResponseDict dict: [String: AnyObject]) -> Void {
@@ -718,58 +639,55 @@ class Database {
                 mobile_phone: fieldDict["Phone - Mobile"] as? String,
                 gender: gender)
             
-            var member = Member(
-                contact: contact,
-                membership: nil,
-                sponsor: nil,
-                nra: nil,
-                notes: nil
-            )
-
+            var member_sponsor: Sponsor? = nil
             if let sponsor_name = fieldDict["Sponsor Name"] as? String, let sponsor_id = Int.fromAnyObject(fieldDict["Sponsor ID #"]) {
-                member.sponsor = Sponsor(
+                member_sponsor = Sponsor(
                     contact_id: contact.id,
                     name: sponsor_name,
                     id: sponsor_id,
                     email: fieldDict["Sponsor Email"] as? String)
             }
             else if let sponsor_name = fieldDict["Sponsor Name"] as? String {
-                member.sponsor = Sponsor(
+                member_sponsor = Sponsor(
                     contact_id: contact.id,
                     name: sponsor_name,
                     id: nil,
                     email: fieldDict["Sponsor Email"] as? String)
             }
             else if let sponsor_id = Int.fromAnyObject(fieldDict["Sponsor ID #"]) {
-                member.sponsor = Sponsor(
+                member_sponsor = Sponsor(
                     contact_id: contact.id,
                     name: nil,
                     id: sponsor_id,
                     email: fieldDict["Sponsor Email"] as? String)
             }
             else if let sponsor_email = fieldDict["Sponsor Email"] as? String {
-                member.sponsor = Sponsor(
+                member_sponsor = Sponsor(
                     contact_id: contact.id,
                     name: nil,
                     id: nil,
                     email: sponsor_email)
             }
             
+            var member_nra: NRAMembership? = nil
             if let nramem = fieldDict["NRA Membership #"] as? String {
-                member.nra = NRAMembership(
+                member_nra = NRAMembership(
                     contact_id: contact.id,
                     id: nramem,
                     exp_date: NSDate.fromAnyObject(fieldDict["NRA Expiration Date"])
                 )
             }
+            
+            var member_note: Note? = nil
             if let text = fieldDict["Notes"] as? String {
-                member.notes = Note(
+                member_note = Note(
                     contact_id: contact.id,
                     text: text,
                     date: nil
                 )
             }
             
+            var member_membership: Membership? = nil
             if let level = membershipLevel {
                 var gateStatus: GateStatus? = nil
                 if let valDict = fieldDict["Card Key Status"] as? [String: AnyObject] {
@@ -778,9 +696,12 @@ class Database {
                     }
                 }
                 var holsterRating: HolsterRating? = nil
-                if let valDict = fieldDict["Holster Rating"] as? [String: AnyObject] {
-                    if let label = valDict["Label"] as? String {
-                        holsterRating = HolsterRating(rawValue: label)
+                if let val = fieldDict["Holster Rating"] as? [[String: AnyObject]] {
+                    for entry in val {
+                        if let label = entry["Label"] as? String {
+                            holsterRating = HolsterRating(rawValue: label)
+                            break
+                        }
                     }
                 }
                 var distMethod: DistributionMethod? = nil
@@ -796,7 +717,7 @@ class Database {
                     }
                 }
 
-                member.membership = Membership(
+                member_membership = Membership(
                     contact_id: contact.id,
                     member_id: Int.fromAnyObject(fieldDict["Member ID #"]),
                     level: level,
@@ -821,22 +742,37 @@ class Database {
                     prob_exp_date: NSDate.fromAnyObject(fieldDict["Probation Expiry Date"])
                 )
             }
-
             
+            var member_groups = [GroupParticipation]()
+            if let groups = fieldDict["Group participation"] as? [AnyObject] {
+                for groupArr in (groups as! [[String : AnyObject]]) {
+                    let newGroup = GroupParticipation(
+                        contact_id: contact.id,
+                        id: groupArr["Id"] as! Int,
+                        name: groupArr["Label"] as! String
+                    )
+                    member_groups.append(newGroup)
+                }
+            }
+    
             
             do {
-                try contacts.insert(db, item: member.contact)
-                if let membership = member.membership {
+                try contacts.insert(db, item: contact)
+                
+                if let membership = member_membership {
                     try members.insert(db, item: membership)
                 }
-                if let sponsor = member.sponsor {
+                if let sponsor = member_sponsor {
                     try sponsors.insert(db, item: sponsor)
                 }
-                if let nramem = member.nra {
+                if let nramem = member_nra {
                     try nra.insert(db, item: nramem)
                 }
-                if let n = member.notes {
-                    try notes.insert(db, item: n)
+                if let note = member_note {
+                    try notes.insert(db, item: note)
+                }
+                for group in member_groups {
+                    try groups.insert(db, item: group)
                 }
             } catch _ {}
         }

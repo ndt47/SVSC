@@ -69,8 +69,7 @@ class GroupMembersQueryItem : StaticMembersQueryItem {
                 let query = contacts.table
                     .join(members.table, on: contacts.table[contacts.id] == members.table[members.contact_id])
                     .filter(group_contacts.contains(contacts.id))
-                    .order(contacts.table[contacts.first_name])
-                    .order(contacts.table[contacts.last_name])
+                    .order(contacts.table[contacts.last_name].asc, contacts.table[contacts.first_name].asc)
                 return db.membersForQuery(query)
             }
             return []
@@ -107,72 +106,63 @@ class QueryListController : NSViewController, NSOutlineViewDataSource, NSOutline
                 let query = db.contacts.table
                     .join(db.members.table, on: db.contacts.table[db.contacts.id] == db.members.table[db.members.contact_id])
                     .filter(db.members.table[db.members.level] == 768881 || db.members.table[db.members.level] == 768879)
-                    .order(db.contacts.table[db.contacts.first_name])
-                    .order(db.contacts.table[db.contacts.last_name])
+                    .order(db.contacts.table[db.contacts.last_name].asc, db.contacts.table[db.contacts.first_name].asc)
                 return db.membersForQuery(query)
             }),
             StaticMembersQueryItem(name: "Probationary", query: { (db) -> [Member] in
                 let query = db.contacts.table
                     .join(db.members.table, on: db.contacts.table[db.contacts.id] == db.members.table[db.members.contact_id])
                     .filter(db.members.table[db.members.level] == 766369 || db.members.table[db.members.level] == 772000)
-                    .order(db.contacts.table[db.contacts.first_name])
-                    .order(db.contacts.table[db.contacts.last_name])
+                    .order(db.contacts.table[db.contacts.last_name].asc, db.contacts.table[db.contacts.first_name].asc)
                 return db.membersForQuery(query)
             }),
             StaticMembersQueryItem(name: "Youth", query: { (db) -> [Member] in
                 let query = db.contacts.table
                     .join(db.members.table, on: db.contacts.table[db.contacts.id] == db.members.table[db.members.contact_id])
                     .filter(db.members.table[db.members.level] == 772000 || db.members.table[db.members.level] == 768878)
-                    .order(db.contacts.table[db.contacts.first_name])
-                    .order(db.contacts.table[db.contacts.last_name])
+                    .order(db.contacts.table[db.contacts.last_name].asc, db.contacts.table[db.contacts.first_name].asc)
                 return db.membersForQuery(query)
             }),
             StaticMembersQueryItem(name: "Applicant", query: { (db) -> [Member] in
                 let query = db.contacts.table
                     .join(db.members.table, on: db.contacts.table[db.contacts.id] == db.members.table[db.members.contact_id])
                     .filter(db.members.table[db.members.level] == 766001)
-                    .order(db.contacts.table[db.contacts.first_name])
-                    .order(db.contacts.table[db.contacts.last_name])
+                    .order(db.contacts.table[db.contacts.last_name].asc, db.contacts.table[db.contacts.first_name].asc)
                 return db.membersForQuery(query)
             }),
             StaticMembersQueryItem(name: "Life", query: { (db) -> [Member] in
                 let query = db.contacts.table
                     .join(db.members.table, on: db.contacts.table[db.contacts.id] == db.members.table[db.members.contact_id])
                     .filter(db.members.table[db.members.level] == 765404)
-                    .order(db.contacts.table[db.contacts.first_name])
-                    .order(db.contacts.table[db.contacts.last_name])
+                    .order(db.contacts.table[db.contacts.last_name].asc, db.contacts.table[db.contacts.first_name].asc)
                 return db.membersForQuery(query)
             }),
             StaticMembersQueryItem(name: "Senior", query: { (db) -> [Member] in
                 let query = db.contacts.table
                     .join(db.members.table, on: db.contacts.table[db.contacts.id] == db.members.table[db.members.contact_id])
                     .filter(db.members.table[db.members.level] == 768880)
-                    .order(db.contacts.table[db.contacts.first_name])
-                    .order(db.contacts.table[db.contacts.last_name])
+                    .order(db.contacts.table[db.contacts.last_name].asc, db.contacts.table[db.contacts.first_name].asc)
                 return db.membersForQuery(query)
             }),
             StaticMembersQueryItem(name: "Veteran", query: { (db) -> [Member] in
                 let query = db.contacts.table
                     .join(db.members.table, on: db.contacts.table[db.contacts.id] == db.members.table[db.members.contact_id])
                     .filter(db.members.table[db.members.level] == 765464)
-                    .order(db.contacts.table[db.contacts.first_name])
-                    .order(db.contacts.table[db.contacts.last_name])
+                    .order(db.contacts.table[db.contacts.last_name].asc, db.contacts.table[db.contacts.first_name].asc)
                 return db.membersForQuery(query)
             }),
             StaticMembersQueryItem(name: "Seaside", query: { (db) -> [Member] in
                 let query = db.contacts.table
                     .join(db.members.table, on: db.contacts.table[db.contacts.id] == db.members.table[db.members.contact_id])
                     .filter(db.members.table[db.members.level] == 772041)
-                    .order(db.contacts.table[db.contacts.first_name])
-                    .order(db.contacts.table[db.contacts.last_name])
+                    .order(db.contacts.table[db.contacts.last_name].asc, db.contacts.table[db.contacts.first_name].asc)
                 return db.membersForQuery(query)
             }),
             StaticMembersQueryItem(name: "Scotts Valley PD", query: { (db) -> [Member] in
                 let query = db.contacts.table
                     .join(db.members.table, on: db.contacts.table[db.contacts.id] == db.members.table[db.members.contact_id])
                     .filter(db.members.table[db.members.level] == 768806)
-                    .order(db.contacts.table[db.contacts.first_name])
-                    .order(db.contacts.table[db.contacts.last_name])
+                    .order(db.contacts.table[db.contacts.last_name].asc, db.contacts.table[db.contacts.first_name].asc)
                 return db.membersForQuery(query)
             }),
         ]))
@@ -191,8 +181,7 @@ class QueryListController : NSViewController, NSOutlineViewDataSource, NSOutline
             groupChildren.append(StaticMembersQueryItem(name: "Holster Rated", query: { (db) -> [Member] in
                 let query = db.contacts.table
                     .filter(db.members.table[db.members.holster] == "Yes")
-                    .order(db.contacts.table[db.contacts.first_name])
-                    .order(db.contacts.table[db.contacts.last_name])
+                    .order(db.contacts.table[db.contacts.last_name].asc, db.contacts.table[db.contacts.first_name].asc)
                 return db.membersForQuery(query)
             }))
 

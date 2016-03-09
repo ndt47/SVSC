@@ -1,0 +1,6 @@
+[submodule "SVSC/CSwiftV"]
+	path = SVSC/CSwiftV
+	url = https://github.com/Daniel1of1/CSwiftV.git
+[submodule "SVSC/SQLite.swift"]
+	path = SVSC/SQLite.swift
+	url = https://github.com/stephencelis/SQLite.swift.git

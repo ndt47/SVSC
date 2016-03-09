@@ -200,3 +200,21 @@ typealias Event = (
     end: NSDate?
 )
 
+
+enum Gate : String {
+    case Upper = "Upper"
+    case Lower = "Lower"
+}
+
+enum GateSide : Int {
+    case Enter = 1
+    case Exit = -1
+}
+
+typealias GateAccess = (
+    id: Int,
+    name: String?,
+    gate: Gate,
+    side: GateSide,
+    date: NSDate
+)

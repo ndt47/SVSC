@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SVSC/QueryListController.swift"
-            timestampString = "479110585.500792"
+            timestampString = "479202272.03085"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "252"
-            endingLineNumber = "252"
+            startingLineNumber = "241"
+            endingLineNumber = "241"
             landmarkName = "outlineView(_:objectValueForTableColumn:byItem:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SVSC/QueryListController.swift"
-            timestampString = "479110585.500792"
+            timestampString = "479202272.03085"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "242"
-            endingLineNumber = "242"
+            startingLineNumber = "231"
+            endingLineNumber = "231"
             landmarkName = "outlineView(_:child:ofItem:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -58,11 +58,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SVSC/Database.swift"
-            timestampString = "479141274.575799"
+            timestampString = "479202272.03085"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "700"
-            endingLineNumber = "700"
+            startingLineNumber = "270"
+            endingLineNumber = "270"
             landmarkName = "importMembers(fromResponseDict:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -90,11 +90,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SVSC/Database.swift"
-            timestampString = "479141274.575799"
+            timestampString = "479202272.03085"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "754"
-            endingLineNumber = "754"
+            startingLineNumber = "324"
+            endingLineNumber = "324"
             landmarkName = "importMembers(fromResponseDict:)"
             landmarkType = "5">
          </BreakpointContent>

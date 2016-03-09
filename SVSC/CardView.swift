@@ -98,7 +98,7 @@ class CardView : NSView {
             }
         }
         
-        var contentRect = NSInsetRect(bounds, dpi * 0.05, dpi * 0.05)
+        var contentRect = NSInsetRect(bounds, dpi * 0.01, dpi * 0.01)
         
         var topBorderRect = NSZeroRect
         NSDivideRect(contentRect, &topBorderRect, &contentRect, dpi * 0.5, .MaxY)

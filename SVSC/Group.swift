@@ -9,30 +9,30 @@
 import Foundation
 
 class Group {
-    let group = dispatch_group_create()
-    var queue = dispatch_get_main_queue()
+    let group = DispatchGroup()
+    var queue = DispatchQueue.main
     
-    func enter(work: ((() -> Void) -> Void)) -> Void {
-        dispatch_group_enter(group)
+    func enter(_ work: ((@escaping () -> Void) -> Void)) -> Void {
+        group.enter()
         work { () -> Void in
-            dispatch_group_leave(self.group)
+            self.group.leave()
         }
     }
     
     func wait() -> Void {
-        dispatch_group_wait(group, DISPATCH_TIME_FOREVER)
+        group.wait(timeout: DispatchTime.distantFuture)
     }
     
-    func wait(seconds: Double) -> Void {
-        dispatch_group_wait(group, dispatch_time(DISPATCH_TIME_NOW, Int64(seconds * Double(NSEC_PER_SEC))))
+    func wait(_ seconds: Double) -> Void {
+        group.wait(timeout: DispatchTime.now() + Double(Int64(seconds * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC))
     }
     
-    func notify(block: dispatch_block_t) -> Void {
-        dispatch_group_notify(group, queue, block)
+    func notify(_ block: @escaping ()->()) -> Void {
+        group.notify(queue: queue, execute: block)
     }
     
-    func notify(queue: dispatch_queue_t, block: dispatch_block_t) -> Void {
-        dispatch_group_notify(group, queue, block)
+    func notify(_ queue: DispatchQueue, block: @escaping ()->()) -> Void {
+        group.notify(queue: queue, execute: block)
     }
     
 }

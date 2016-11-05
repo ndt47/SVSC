@@ -11,39 +11,47 @@ import Cocoa
 class MemberDetailController : NSViewController {
     
     @IBOutlet weak var cardView: CardView?
+    @IBOutlet var notesView: NSTextView?
 
     var member: Member? {
         didSet {
-            if let cv = cardView {
-                cv.member = member
-                cv.setNeedsDisplayInRect(cv.bounds)
-            }
+            cardView?.member = member
+            cardView?.setNeedsDisplay((cardView?.bounds)!)
+            notesView?.string = member?.notes?.text ?? ""
+            notesView?.setNeedsDisplay((notesView?.bounds)!)
         }
     }
     
-    override func prepareForSegue(segue: NSStoryboardSegue, sender: AnyObject?) {
-        super.prepareForSegue(segue, sender: sender)
+    override func prepare(for segue: NSStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
     }
     
     required init?(coder: NSCoder) {
-        member = coder.decodeObjectForKey("member") as? Member
+        member = coder.decodeObject(forKey: "member") as? Member
         super.init(coder: coder)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "selectedMembersDidChange:", name: "SelectedMembersDidChange", object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(MemberDetailController.selectedMembersDidChange(_:)), name: NSNotification.Name(rawValue: "SelectedMembersDidChange"), object: nil)
     }
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "selectedMembersDidChange:", name: "SelectedMembersDidChange", object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(MemberDetailController.selectedMembersDidChange(_:)), name: NSNotification.Name(rawValue: "SelectedMembersDidChange"), object: nil)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "selectedMembersDidChange:", name: "SelectedMembersDidChange", object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(MemberDetailController.selectedMembersDidChange(_:)), name: NSNotification.Name(rawValue: "SelectedMembersDidChange"), object: nil)
     }
     
-    func selectedMembersDidChange(note: NSNotification) -> Void {
-        if let members = note.userInfo?["selectedMembers"] as? [Member] where members.count > 0 {
+    func selectedMembersDidChange(_ note: Notification) -> Void {
+        if let members = (note as NSNotification).userInfo?["selectedMembers"] as? [Member] , members.count > 0 {
             self.member = members[0]
         }
+    }
+    
+    func memberDetails() -> NSAttributedString? {
+        guard let text = member?.notes?.text else {
+            return nil
+        }
+        return NSAttributedString(string: text)
     }
 }

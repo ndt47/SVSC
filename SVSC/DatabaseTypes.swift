@@ -11,7 +11,7 @@ import Foundation
 typealias Edit = (
     previous: Member,
     new: Member,
-    date: NSDate
+    date: Date
 )
 
 enum Gender: String {
@@ -30,7 +30,7 @@ typealias Contact = (
     city: String?,
     state: String?,
     zip: String?,
-    birth_date: NSDate?,
+    birth_date: Date?,
     email: String,
     alt_email: String?,
     home_phone: String?,
@@ -42,7 +42,7 @@ typealias Contact = (
 typealias Note = (
     contact_id: Int,
     text: String,
-    date: NSDate?
+    date: Date?
 )
 
 typealias Sponsor = (
@@ -94,7 +94,7 @@ enum MembershipType: String {
     }
     func className() -> String? {
         switch self {
-        case .Regular, .Regular_Service, .Probationary, Applicant:
+        case .Regular, .Regular_Service, .Probationary, .Applicant:
             return "Regular"
         case .Youth, .Youth_Probationary:
             return "Youth"
@@ -147,30 +147,30 @@ typealias Membership = (
     member_id: Int?,
     level: MembershipLevel,
     status: MembershipStatus?,
-    change_date: NSDate?,
+    change_date: Date?,
     
     gate_card: String?,
     gate_status: GateStatus?,
     holster: HolsterRating?,
     
-    application_date: NSDate?,
-    membership_date: NSDate?,
-    orientation_date: NSDate?,
+    application_date: Date?,
+    membership_date: Date?,
+    orientation_date: Date?,
     
-    perm_id_dist_date: NSDate?,
+    perm_id_dist_date: Date?,
     perm_id_dist_method: DistributionMethod?,
     
-    prob_id_dist_date: NSDate?,
-    meeting1: NSDate?,
-    meeting2: NSDate?,
-    meeting3: NSDate?,
-    prob_exp_date: NSDate?
+    prob_id_dist_date: Date?,
+    meeting1: Date?,
+    meeting2: Date?,
+    meeting3: Date?,
+    prob_exp_date: Date?
 )
 
 typealias NRAMembership = (
     contact_id: Int,
     id: String,
-    exp_date: NSDate?
+    exp_date: Date?
 )
 
 typealias MembershipLevel = (
@@ -179,11 +179,27 @@ typealias MembershipLevel = (
     url: String
 )
 
-typealias Registration = (
-    contact_id: Int,
-    date: NSDate,
+typealias ClubEvent = (
+    id: Int,
+    name: String,
     location: String,
-    event: Event?
+    start_date: Date,
+    end_date: Date,
+    registration_enabled: Bool,
+    registration_limit: Int?,
+    registrations: [ClubEventRegistration]?,
+    registration_count: Int?,
+    checked_in_attendees_count: Int,
+    url: String
+)
+
+typealias ClubEventRegistration = (
+    event_id: Int,
+    registration_type_id: Int?,
+    contact_id: Int,
+    checked_in: Bool,
+    paid: Bool,
+    date: Date
 )
 
 typealias GroupParticipation = (
@@ -196,19 +212,20 @@ typealias Event = (
     id: Int,
     name: String,
     descriptions: String,
-    start: NSDate,
-    end: NSDate?
+    start: Date,
+    end: Date?
 )
 
 
 enum Gate : String {
-    case Upper = "Upper"
-    case Lower = "Lower"
+    case Upper = "Upper Gate"
+    case Lower = "Lower Gate"
 }
 
 enum GateSide : Int {
-    case Enter = 1
-    case Exit = -1
+    case enter = 1
+    case exit = -1
+    case denied = 0
 }
 
 typealias GateAccess = (
@@ -216,5 +233,5 @@ typealias GateAccess = (
     name: String?,
     gate: Gate,
     side: GateSide,
-    date: NSDate
+    date: Date
 )

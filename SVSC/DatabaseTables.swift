@@ -24,7 +24,7 @@ class ContactsTable : DatabaseTable {
     let city = Expression<String?>("city")
     let state = Expression<String?>("state")
     let zip = Expression<String?>("zip")
-    let birth_date = Expression<NSDate?>("birth_date")
+    let birth_date = Expression<Date?>("birth_date")
     let email = Expression<String>("email")
     let alt_email = Expression<String?>("alt_email")
     let home_phone = Expression<String?>("home_phone")
@@ -32,7 +32,7 @@ class ContactsTable : DatabaseTable {
     let mobile_phone = Expression<String?>("mobile_phone")
     let gender = Expression<String?>("gender")
     
-    func create(db: Connection) throws -> Void {
+    func create(_ db: Connection) throws -> Void {
         do {
             try db.run( table.create { t -> Void in
                 t.column(id, primaryKey: true)
@@ -58,21 +58,21 @@ class ContactsTable : DatabaseTable {
             throw e
         }
     }
-    func insert(db: Connection, item: T) throws -> Int64 {
+    func insert(_ db: Connection, item: T) throws -> Int64 {
         let insert = table.insert(id <- item.id, first_name <- item.first_name, middle_name <- item.middle_name, last_name <- item.last_name, preferred_name <- item.preferred_name, address1 <- item.address1, address2 <- item.address2, city <- item.city, state <- item.state, zip <- item.zip, birth_date <- item.birth_date, email <- item.email, alt_email <- item.alt_email, home_phone <- item.home_phone, work_phone <- item.work_phone, mobile_phone <- item.mobile_phone, gender <- item.gender?.rawValue)
         do {
             let row = try db.run( insert )
             guard row > 0 else {
-                throw DataBaseError.InsertError
+                throw DataBaseError.insertError
             }
             return row
         } catch _ {}
         return 0
     }
-    func delete(db: Connection, item: T) throws -> Void {
+    func delete(_ db: Connection, item: T) throws -> Void {
         
     }
-    func findAll(db: Connection) throws -> [T]? {
+    func findAll(_ db: Connection) throws -> [T]? {
         if let items = try? db.prepare(table) {
             var results = [T]()
             
@@ -99,9 +99,9 @@ class NotesTable : DatabaseTable {
     
     let contact_id = Expression<Int>("contact_id")
     let text = Expression<String>("text")
-    let date = Expression<NSDate?>("date")
+    let date = Expression<Date?>("date")
     
-    func create(db: Connection) throws -> Void {
+    func create(_ db: Connection) throws -> Void {
         do {
             try db.run( table.create { t -> Void in
                 t.column(contact_id)
@@ -110,22 +110,22 @@ class NotesTable : DatabaseTable {
                 })
         } catch _ {}
     }
-    func insert(db: Connection, item: T) throws -> Int64 {
+    func insert(_ db: Connection, item: T) throws -> Int64 {
         let insert = table.insert(contact_id <- item.contact_id, text <- item.text, date <- item.date)
         do {
             let row = try db.run(insert)
             guard row > 0 else {
-                throw DataBaseError.InsertError
+                throw DataBaseError.insertError
             }
             return row
         }
         catch _ {}
         return 0
     }
-    func delete(db: Connection, item: T) throws -> Void {
+    func delete(_ db: Connection, item: T) throws -> Void {
         
     }
-    func findAll(db: Connection) throws -> [T]? {
+    func findAll(_ db: Connection) throws -> [T]? {
         if let items = try? db.prepare(table) {
             var results = [T]()
             
@@ -150,7 +150,7 @@ class SponsorTable : DatabaseTable {
     let id = Expression<Int?>("sponsor_id")
     let email = Expression<String?>("sponsor_email")
     
-    func create(db: Connection) throws -> Void {
+    func create(_ db: Connection) throws -> Void {
         do {
             try db.run( table.create { t -> Void in
                 t.column(contact_id, primaryKey: true)
@@ -160,22 +160,22 @@ class SponsorTable : DatabaseTable {
                 })
         } catch _ {}
     }
-    func insert(db: Connection, item: T) throws -> Int64 {
+    func insert(_ db: Connection, item: T) throws -> Int64 {
         let insert = table.insert(contact_id <- item.contact_id, name <- item.name, id <- item.id, email <- item.email)
         do {
             let row = try db.run(insert)
             guard row > 0 else {
-                throw DataBaseError.InsertError
+                throw DataBaseError.insertError
             }
             return row
         }
         catch _ {}
         return 0
     }
-    func delete(db: Connection, item: T) throws -> Void {
+    func delete(_ db: Connection, item: T) throws -> Void {
         
     }
-    func findAll(db: Connection) throws -> [T]? {
+    func findAll(_ db: Connection) throws -> [T]? {
         if let items = try? db.prepare(table) {
             var results = [T]()
             
@@ -197,9 +197,9 @@ class NRAMembershipTable : DatabaseTable {
     
     let contact_id = Expression<Int>("contact_id")
     let id = Expression<String>("nra_membership_id")
-    let exp_date = Expression<NSDate?>("nra_membership_exp_date")
+    let exp_date = Expression<Date?>("nra_membership_exp_date")
     
-    func create(db: Connection) throws -> Void {
+    func create(_ db: Connection) throws -> Void {
         do {
             try db.run( table.create { t -> Void in
                 t.column(contact_id)
@@ -208,22 +208,22 @@ class NRAMembershipTable : DatabaseTable {
                 })
         } catch _ {}
     }
-    func insert(db: Connection, item: T) throws -> Int64 {
+    func insert(_ db: Connection, item: T) throws -> Int64 {
         let insert = table.insert(contact_id <- item.contact_id, id <- item.id, exp_date <- item.exp_date)
         do {
             let row = try db.run(insert)
             guard row > 0 else {
-                throw DataBaseError.InsertError
+                throw DataBaseError.insertError
             }
             return row
         }
         catch _ {}
         return 0
     }
-    func delete(db: Connection, item: T) throws -> Void {
+    func delete(_ db: Connection, item: T) throws -> Void {
         
     }
-    func findAll(db: Connection) throws -> [T]? {
+    func findAll(_ db: Connection) throws -> [T]? {
         if let items = try? db.prepare(table) {
             var results = [T]()
             
@@ -247,27 +247,27 @@ class MembershipTable : DatabaseTable {
     let member_id = Expression<Int?>("member_id")
     let level = Expression<Int>("level")
     let status = Expression<String?>("status")
-    let change_date = Expression<NSDate?>("change_date")
+    let change_date = Expression<Date?>("change_date")
     
     let gate_card = Expression<String?>("gate_card")
     let gate_status = Expression<String?>("gate_status")
     let gate_id = Expression<Int?>("gate_id")
     let holster = Expression<String?>("holster")
     
-    let application_date = Expression<NSDate?>("application_date")
-    let membership_date = Expression<NSDate?>("membership_date")
-    let orientation_date = Expression<NSDate?>("orienation_date")
+    let application_date = Expression<Date?>("application_date")
+    let membership_date = Expression<Date?>("membership_date")
+    let orientation_date = Expression<Date?>("orienation_date")
     
-    let perm_id_dist_date = Expression<NSDate?>("perm_id_dist_date")
+    let perm_id_dist_date = Expression<Date?>("perm_id_dist_date")
     let perm_id_dist_method = Expression<String?>("perm_id_dist_method")
     
-    let prob_id_dist_date = Expression<NSDate?>("prob_id_dist_date")
-    let meeting1 = Expression<NSDate?>("meeting1")
-    let meeting2 = Expression<NSDate?>("meeting2")
-    let meeting3 = Expression<NSDate?>("meeting3")
-    let prob_exp_date = Expression<NSDate?>("prob_exp_date")
+    let prob_id_dist_date = Expression<Date?>("prob_id_dist_date")
+    let meeting1 = Expression<Date?>("meeting1")
+    let meeting2 = Expression<Date?>("meeting2")
+    let meeting3 = Expression<Date?>("meeting3")
+    let prob_exp_date = Expression<Date?>("prob_exp_date")
     
-    func create(db: Connection) throws -> Void {
+    func create(_ db: Connection) throws -> Void {
         do {
             try db.run( table.create { t -> Void in
                 t.column(contact_id, primaryKey: true)
@@ -276,7 +276,7 @@ class MembershipTable : DatabaseTable {
                 t.column(status)
                 t.column(change_date)
                 
-                t.column(gate_card, unique: true)
+                t.column(gate_card)
                 t.column(gate_status)
                 t.column(holster)
                 
@@ -295,7 +295,7 @@ class MembershipTable : DatabaseTable {
                 })
         } catch _ {}
     }
-    func insert(db: Connection, item: T) throws -> Int64 {
+    func insert(_ db: Connection, item: T) throws -> Int64 {
         
         let insert = table.insert(
             contact_id <- item.contact_id,
@@ -319,17 +319,19 @@ class MembershipTable : DatabaseTable {
         do {
             let row = try db.run(insert)
             guard row > 0 else {
-                throw DataBaseError.InsertError
+                throw DataBaseError.insertError
             }
             return row
         }
-        catch _ {}
+        catch let e {
+            print("MEMBERSHIP FAIL: \(e) \(self)")
+        }
         return 0
     }
-    func delete(db: Connection, item: T) throws -> Void {
+    func delete(_ db: Connection, item: T) throws -> Void {
         
     }
-    func findAll(db: Connection) throws -> [T]? {
+    func findAll(_ db: Connection) throws -> [T]? {
         let levels = LevelsTable()
         
         let query = table.join(levels.table, on: levels.table[levels.id] == table[level])
@@ -373,7 +375,7 @@ class LevelsTable : DatabaseTable {
     let type = Expression<String>("type")
     let url = Expression<String>("url")
     
-    func create(db: Connection) throws -> Void {
+    func create(_ db: Connection) throws -> Void {
         do {
             try db.run( table.create { t -> Void in
                 t.column(id, primaryKey: true)
@@ -382,22 +384,22 @@ class LevelsTable : DatabaseTable {
                 })
         } catch _ {}
     }
-    func insert(db: Connection, item: T) throws -> Int64 {
+    func insert(_ db: Connection, item: T) throws -> Int64 {
         let insert = table.insert(id <- item.id, type <- item.type.rawValue, url <- item.url)
         do {
             let row = try db.run(insert)
             guard row > 0 else {
-                throw DataBaseError.InsertError
+                throw DataBaseError.insertError
             }
             return row
         }
         catch _ {}
         return 0
     }
-    func delete(db: Connection, item: T) throws -> Void {
+    func delete(_ db: Connection, item: T) throws -> Void {
         
     }
-    func findAll(db: Connection) throws -> [T]? {
+    func findAll(_ db: Connection) throws -> [T]? {
         if let items = try? db.prepare(table) {
             var results = [T]()
             
@@ -421,7 +423,7 @@ class GroupsTable : DatabaseTable {
     let contact_id = Expression<Int>("contact_id")
     let name = Expression<String>("name")
     
-    func create(db: Connection) throws {
+    func create(_ db: Connection) throws {
         do {
             try db.run( table.create(block: { (t) -> Void in
                 t.column(contact_id)
@@ -431,23 +433,23 @@ class GroupsTable : DatabaseTable {
         } catch _ {}
     }
     
-    func insert(db: Connection, item: T) throws -> Int64 {
+    func insert(_ db: Connection, item: T) throws -> Int64 {
         let insert = table.insert(contact_id <- item.contact_id, id <- item.id, name <- item.name)
         do {
             let row = try db.run(insert)
             guard row > 0 else {
-                throw DataBaseError.InsertError
+                throw DataBaseError.insertError
             }
             return row
         } catch _ {}
         return 0
     }
     
-    func delete(db: Connection, item: T) throws {
+    func delete(_ db: Connection, item: T) throws {
         
     }
     
-    func findAll(db: Connection) throws -> [T]? {
+    func findAll(_ db: Connection) throws -> [T]? {
         if let items = try? db.prepare(table) {
             var results = [T]()
             
@@ -471,9 +473,9 @@ class GateAccessTable : DatabaseTable {
     let name = Expression<String?>("name")
     let gate = Expression<String>("gate")
     let side = Expression<Int>("side")
-    let date = Expression<NSDate>("date")
+    let date = Expression<Date>("date")
     
-    func create(db: Connection) throws {
+    func create(_ db: Connection) throws {
         do {
             try db.run( table.create(block: { (t) -> Void in
                 t.column(id)
@@ -485,7 +487,7 @@ class GateAccessTable : DatabaseTable {
         } catch _ {}
     }
     
-    func insert(db: Connection, item: T) throws -> Int64 {
+    func insert(_ db: Connection, item: T) throws -> Int64 {
         let insert = table.insert(
             id <- item.id,
             name <- item.name,
@@ -496,18 +498,18 @@ class GateAccessTable : DatabaseTable {
         do {
             let row = try db.run(insert)
             guard row > 0 else {
-                throw DataBaseError.InsertError
+                throw DataBaseError.insertError
             }
             return row
         } catch _ {}
         return 0
     }
     
-    func delete(db: Connection, item: T) throws {
+    func delete(_ db: Connection, item: T) throws {
         
     }
     
-    func findAll(db: Connection) throws -> [T]? {
+    func findAll(_ db: Connection) throws -> [T]? {
         if let items = try? db.prepare(table) {
             var results = [T]()
             

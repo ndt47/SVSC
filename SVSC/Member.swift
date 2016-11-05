@@ -12,13 +12,13 @@ import SQLite
 class Member : NSObject {
     weak var db: Database?
     
-    private var haveCached = [String: Bool]()
-    private var cachedValue = [String: AnyObject]()
+    fileprivate var haveCached = [String: Bool]()
+    fileprivate var cachedValue = [String: AnyObject]()
     
     let contact: Contact
     
-    private var membership_set_ = false
-    private var membership_: Membership? {
+    fileprivate var membership_set_ = false
+    fileprivate var membership_: Membership? {
         didSet {
             membership_set_ = true
         }
@@ -40,7 +40,7 @@ class Member : NSObject {
                 .join(levels.table, on: members.table[members.level] == levels.table[levels.id])
                 .filter(members.contact_id == contact.id)
             
-            if let row = db_conn.pluck(query) {
+            if let row = try! db_conn.pluck(query) {
                 let level = MembershipLevel(
                     id: row[levels.table[levels.id]],
                     type: MembershipType(rawValue: row[levels.type])!,
@@ -87,8 +87,8 @@ class Member : NSObject {
             return membership_
         }
     }
-    private var sponsor_set_ = false
-    private var sponsor_: Sponsor? {
+    fileprivate var sponsor_set_ = false
+    fileprivate var sponsor_: Sponsor? {
         didSet {
             sponsor_set_ = true
         }
@@ -106,7 +106,7 @@ class Member : NSObject {
             }
             let sponsors = db.sponsors
             let query = sponsors.table.filter(sponsors.contact_id == contact.id)
-            if let row = db_conn.pluck(query) {
+            if let row = try! db_conn.pluck(query) {
                 let contacts = db.contacts
                 let members = db.members
                 if let id = row[sponsors.id] {
@@ -115,7 +115,7 @@ class Member : NSObject {
                         .select(contacts.preferred_name, contacts.first_name, contacts.last_name, contacts.email)
                         .filter(members.table[members.member_id] == id)
                         .limit(1)
-                    if let r = db_conn.pluck(query) {
+                    if let r = try! db_conn.pluck(query) {
                         var first = r[contacts.first_name]
                         if let nick = r[contacts.preferred_name] {
                             first = nick
@@ -129,8 +129,8 @@ class Member : NSObject {
                     }
                 }
                 if let email = row[sponsors.email] {
-                    let query = contacts.table.join(members.table, on: contacts.table[contacts.id] == members.table[members.contact_id]).select(contacts.preferred_name, contacts.first_name, contacts.last_name, members.member_id).filter(contacts.table[contacts.email].lowercaseString.like(email.lowercaseString)).limit(1)
-                    if let r = db_conn.pluck(query) {
+                    let query = contacts.table.join(members.table, on: contacts.table[contacts.id] == members.table[members.contact_id]).select(contacts.preferred_name, contacts.first_name, contacts.last_name, members.member_id).filter(contacts.table[contacts.email].lowercaseString.like(email.lowercased())).limit(1)
+                    if let r = try! db_conn.pluck(query) {
                         if let id = r[members.member_id] {
                             var first = r[contacts.first_name]
                             if let nick = r[contacts.preferred_name] {
@@ -146,10 +146,10 @@ class Member : NSObject {
                     }
                 }
                 if let name = row[sponsors.name] {
-                    let components = name.uppercaseString.componentsSeparatedByString(" ")
+                    let components = name.uppercased().components(separatedBy: " ")
                     if let first = components.first, let last = components.last {
                         let query = contacts.table.join(members.table, on: contacts.table[contacts.id] == members.table[members.contact_id]).select(contacts.preferred_name, contacts.first_name, contacts.last_name, contacts.email, members.member_id).filter((contacts.table[contacts.first_name].uppercaseString.like(first) || contacts.table[contacts.preferred_name].uppercaseString.like(first)) && contacts.table[contacts.last_name].uppercaseString.like(last)).limit(1)
-                        if let r = db_conn.pluck(query) {
+                        if let r = try! db_conn.pluck(query) {
                             if let id = r[members.member_id] {
                                 var first = r[contacts.first_name]
                                 if let nick = r[contacts.preferred_name] {
@@ -169,8 +169,8 @@ class Member : NSObject {
             return sponsor_
         }
     }
-    private var nra_set_ = false
-    private var nra_: NRAMembership? {
+    fileprivate var nra_set_ = false
+    fileprivate var nra_: NRAMembership? {
         didSet {
             nra_set_ = true
         }
@@ -188,15 +188,15 @@ class Member : NSObject {
             }
             let nra = db.nra
             let query = nra.table.filter(nra.contact_id == contact.id)
-            if let row = db_conn.pluck(query) {
+            if let row = try! db_conn.pluck(query) {
                 nra_ = NRAMembership(contact_id: contact.id, id: row[nra.id], exp_date: row[nra.exp_date])
             }
             return nra_
         }
     }
     
-    private var notes_set_ = false
-    private var notes_: Note? {
+    fileprivate var notes_set_ = false
+    fileprivate var notes_: Note? {
         didSet {
             notes_set_ = true
         }
@@ -214,14 +214,14 @@ class Member : NSObject {
             }
             let notes = db.notes
             let query = notes.table.filter(notes.contact_id == contact.id)
-            if let row = db_conn.pluck(query) {
+            if let row = try! db_conn.pluck(query) {
                 notes_ = Note(contact_id: contact.id, text: row[notes.text], date: nil)
             }
             return notes_
         }
     }
-    private var groups_set_ = false
-    private var groups_: [GroupParticipation]? {
+    fileprivate var groups_set_ = false
+    fileprivate var groups_: [GroupParticipation]? {
         didSet {
             groups_set_ = true
         }
@@ -276,16 +276,16 @@ class Member : NSObject {
         }
     }
     
-    override func valueForUndefinedKey(key: String) -> AnyObject? {
+    override func value(forUndefinedKey key: String) -> Any? {
         switch key {
         case "first_name":
-            return contact.first_name.capitalizedString
+            return contact.first_name.capitalized
         case "last_name":
-            return contact.last_name.capitalizedString
+            return contact.last_name.capitalized
         case "preferred_name":
-            return contact.preferred_name?.capitalizedString
+            return contact.preferred_name?.capitalized
         case "email":
-            return contact.email.lowercaseString
+            return contact.email.lowercased()
         case "member_id":
             return membership?.member_id
         case "member_level":

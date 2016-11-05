@@ -33,20 +33,20 @@ class CustomMembersQueryItem : OutlineItem, NSCoding {
     }
     
     required init?(coder aDecoder: NSCoder) {
-        sql = aDecoder.decodeObjectForKey("sql") as! String
-        super.init(name: aDecoder.decodeObjectForKey("name") as! String, children: nil)
+        sql = aDecoder.decodeObject(forKey: "sql") as! String
+        super.init(name: aDecoder.decodeObject(forKey: "name") as! String, children: nil)
     }
     
-    func encodeWithCoder(aCoder: NSCoder) {
-        aCoder.encodeObject(name, forKey: "name")
-        aCoder.encodeObject(sql, forKey: "sql")
+    func encode(with aCoder: NSCoder) {
+        aCoder.encode(name, forKey: "name")
+        aCoder.encode(sql, forKey: "sql")
     }
 }
 
 class StaticMembersQueryItem : OutlineItem {
-    let query: ((db: Database) -> [Member])
+    let query: ((_ db: Database) -> [Member])
     
-    init(name: String, query: ((db: Database) -> [Member])) {
+    init(name: String, query: @escaping ((_ db: Database) -> [Member])) {
         self.query = query
         super.init(name: name, children: nil)
     }
@@ -80,20 +80,13 @@ class GroupMembersQueryItem : StaticMembersQueryItem {
 class QueryListController : NSViewController, NSOutlineViewDataSource, NSOutlineViewDelegate {
     @IBOutlet weak var sourceList: NSOutlineView?
 
-    private var items: [OutlineItem] = [OutlineItem]()
-    private let waManager = WildApricotManager()
+    fileprivate var items: [OutlineItem] = [OutlineItem]()
 
-    private var password = "w1ll1amg1bs0n"
-    private var username = "nathantaylor@me.com"
-    
-    private let db = try? Database(path: "members.db")
+    fileprivate let db = Database.sharedDatabase
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        guard let db = self.db else {
-            return
-        }
         guard let db_conn = db.db else {
             return
         }
@@ -165,6 +158,20 @@ class QueryListController : NSViewController, NSOutlineViewDataSource, NSOutline
                     .order(db.contacts.table[db.contacts.last_name].asc, db.contacts.table[db.contacts.first_name].asc)
                 return db.membersForQuery(query)
             }),
+            StaticMembersQueryItem(name: "Pending Level Change", query: { (db) -> [Member] in
+                let query = db.contacts.table
+                    .join(db.members.table, on: db.contacts.table[db.contacts.id] == db.members.table[db.members.contact_id])
+                    .filter(db.members.table[db.members.status] == MembershipStatus.PendingUpgrade.rawValue)
+                    .order(db.contacts.table[db.contacts.last_name].asc, db.contacts.table[db.contacts.first_name].asc)
+                return db.membersForQuery(query)
+            }),
+            StaticMembersQueryItem(name: "Graduating", query: { (db) -> [Member] in
+                let query = db.contacts.table
+                    .join(db.members.table, on: db.contacts.table[db.contacts.id] == db.members.table[db.members.contact_id])
+                    .filter(db.members.table[db.members.meeting3] != nil)
+                    .order(db.contacts.table[db.contacts.last_name].asc, db.contacts.table[db.contacts.first_name].asc)
+                return db.membersForQuery(query)
+            }),
         ]))
         items.append(OutlineItem(name: "EVENTS", children: []))
         
@@ -180,13 +187,12 @@ class QueryListController : NSViewController, NSOutlineViewDataSource, NSOutline
             }
             groupChildren.append(StaticMembersQueryItem(name: "Holster Rated", query: { (db) -> [Member] in
                 let query = db.contacts.table
+                    .join(db.members.table, on: db.members.contact_id == db.contacts.id)
                     .filter(db.members.table[db.members.holster] == "Yes")
                     .order(db.contacts.table[db.contacts.last_name].asc, db.contacts.table[db.contacts.first_name].asc)
                 return db.membersForQuery(query)
             }))
-
         }
-        
         items.append(OutlineItem(name: "GROUPS", children: groupChildren))
     }
     
@@ -195,14 +201,14 @@ class QueryListController : NSViewController, NSOutlineViewDataSource, NSOutline
 
         sourceList?.reloadData()
 
-        NSNotificationCenter.defaultCenter().postNotificationName("MembersQueryDidChange", object: self, userInfo: ["members" : db!.allMembers()])
+        NotificationCenter.default.post(name: Notification.Name(rawValue: "MembersQueryDidChange"), object: self, userInfo: ["members" : db.allMembers()])
     }
  
-    func outlineView(outlineView: NSOutlineView, heightOfRowByItem item: AnyObject) -> CGFloat {
+    func outlineView(_ outlineView: NSOutlineView, heightOfRowByItem item: Any) -> CGFloat {
         return 24.0
     }
     
-    func outlineView(outlineView: NSOutlineView, numberOfChildrenOfItem item: AnyObject?) -> Int {
+    func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
         if let item = item as? OutlineItem {
             guard let items = item.children else {
                 return 0
@@ -212,7 +218,7 @@ class QueryListController : NSViewController, NSOutlineViewDataSource, NSOutline
         return self.items.count
     }
     
-    func outlineView(outlineView: NSOutlineView, isItemExpandable item: AnyObject) -> Bool {
+    func outlineView(_ outlineView: NSOutlineView, isItemExpandable item: Any) -> Bool {
         guard let item = item as? OutlineItem else {
             return false
         }
@@ -222,11 +228,11 @@ class QueryListController : NSViewController, NSOutlineViewDataSource, NSOutline
         return children.count > 0 ? true : false
     }
     
-    func outlineView(outlineView: NSOutlineView, isGroupItem item: AnyObject) -> Bool {
+    func outlineView(_ outlineView: NSOutlineView, isGroupItem item: Any) -> Bool {
         return self.items.contains(item as! OutlineItem)
     }
     
-    func outlineView(outlineView: NSOutlineView, child index: Int, ofItem item: AnyObject?) -> AnyObject {
+    func outlineView(_ outlineView: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
         
         guard let item = item as? OutlineItem else {
             return self.items[index]
@@ -237,37 +243,27 @@ class QueryListController : NSViewController, NSOutlineViewDataSource, NSOutline
         return children[index]
     }
     
-    func outlineView(outlineView: NSOutlineView, objectValueForTableColumn tableColumn: NSTableColumn?, byItem item: AnyObject?) -> AnyObject? {
+    func outlineView(_ outlineView: NSOutlineView, objectValueFor tableColumn: NSTableColumn?, byItem item: Any?) -> Any? {
         if let i = item as? OutlineItem {
             return i.name
         }
         return nil
     }
 
-    func outlineView(outlineView: NSOutlineView, shouldSelectItem item: AnyObject) -> Bool {
+    func outlineView(_ outlineView: NSOutlineView, shouldSelectItem item: Any) -> Bool {
         return true
     }
     
-    func outlineViewSelectionDidChange(notification: NSNotification) {
+    func outlineViewSelectionDidChange(_ notification: Notification) {
         guard let outlineView = self.sourceList else {
             return
         }
-        if let item = outlineView.itemAtRow(outlineView.selectedRow) as? StaticMembersQueryItem {
-            NSNotificationCenter.defaultCenter().postNotificationName("MembersQueryDidChange", object: self, userInfo: ["members" : item.query(db: db!)])
+        if let item = outlineView.item(atRow: outlineView.selectedRow) as? StaticMembersQueryItem {
+            NotificationCenter.default.post(name: Notification.Name(rawValue: "MembersQueryDidChange"), object: self, userInfo: ["members" : item.query(db)])
         }
         else {
-            NSNotificationCenter.defaultCenter().postNotificationName("MembersQueryDidChange", object: self, userInfo: ["members" : db!.allMembers()])
+            NotificationCenter.default.post(name: Notification.Name(rawValue: "MembersQueryDidChange"), object: self, userInfo: ["members" : db.allMembers()])
         }
     }
     
-    @IBAction func loadMembers(sender: AnyObject) -> Void {
-        waManager.authenticate(username, password: password)
-        waManager.downloadMembers { (json) -> Void in
-            if let db = self.db, let response = json {
-                db.importMembers(fromResponseDict: response)
-                
-                NSNotificationCenter.defaultCenter().postNotificationName("MembersQueryDidChange", object: self, userInfo: ["members" : db.allMembers()])
-            }
-        }
-    }
 }

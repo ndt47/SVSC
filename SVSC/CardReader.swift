@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CryptoTokenKit
 
 class CardManager {
     class Reader {
@@ -24,6 +25,7 @@ class CardManager {
             state = SCARD_READERSTATE_A(szReader: str, pvUserData: nil, dwCurrentState: UInt32(SCARD_STATE_EMPTY), dwEventState: 0, cbAtr: 0, rgbAtr: (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0))
         }
     }
+    
     
     private var context: SCARDCONTEXT = 0;
     private var readers: [Reader]? = nil

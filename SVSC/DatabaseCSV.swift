@@ -82,7 +82,7 @@ extension Database {
                     date: date
                 )
                 do {
-                    try gate_access.insert(db_conn, item: record)
+                    try _ = gate_access.insert(db_conn, item: record)
                 }
                 catch _ {}
             }
@@ -131,7 +131,7 @@ extension Database {
                 if remaining.count == 1 {
                     let gate_id = remaining.first!
                     do {
-                        try db_conn.run(members.table.filter(members.contact_id == contact_id).update(members.gate_id <- gate_id))
+                        try _ = db_conn.run(members.table.filter(members.contact_id == contact_id).update(members.gate_id <- gate_id))
                     }
                     catch _ {}
                 }

@@ -198,7 +198,7 @@
 		D8D2384C1C8B5C5E0039F85B /* MemberDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MemberDetailController.swift; sourceTree = "<group>"; };
 		D8D2384E1C8B64840039F85B /* WildApricotManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WildApricotManager.swift; sourceTree = "<group>"; };
 		D8D238501C8B84F60039F85B /* CredentialView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CredentialView.swift; sourceTree = "<group>"; };
-		D8F689111CC52C20009DDDF8 /* photos */ = {isa = PBXFileReference; lastKnownFileType = folder; name = photos; path = "../../../Dropbox (SVSC Sportsmen)/Secretary Files/ID Cards/photos"; sourceTree = "<group>"; };
+		D8F689111CC52C20009DDDF8 /* photos */ = {isa = PBXFileReference; lastKnownFileType = folder; name = photos; path = "../../../Google Drive/photos"; sourceTree = "<group>"; };
 		D8F689131CD669CC009DDDF8 /* PrintMailingLabelsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrintMailingLabelsViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 

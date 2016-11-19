@@ -263,11 +263,11 @@ class Member : NSObject {
                     var valid_group_ids = [Int]()
                     for group in g {
                         valid_group_ids.append(group.id)
-                        try groups.insert(db_conn, item: group)
+                        try _ = groups.insert(db_conn, item: group)
                     }
                     
                     let delete = groups.table.filter(valid_group_ids.contains(groups.id)).delete()
-                    try db_conn.run(delete)
+                    try _ = db_conn.run(delete)
                 }
             }
             catch _ {}
@@ -303,6 +303,19 @@ class Member : NSObject {
         self.db = db
         self.contact = contact
         super.init()
+    }
+    
+    func update(_ completion:@escaping ()->Void) {
+        let mgr = WildApricotManager.sharedManager
+        
+        mgr.authenticate("nathantaylor@me.com", password: "w1ll1amg1bs0n")
+        mgr.downloadContact(self.contact.id) { (json: [String: AnyObject]?) in
+            guard let entry = json else {
+                return
+            }
+            self.db?.importMember(entry)
+            completion()
+        }
     }
 }
 

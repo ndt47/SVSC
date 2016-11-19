@@ -102,10 +102,10 @@ class MainWindowController : NSWindowController {
         let waManager = WildApricotManager.sharedManager
         
         waManager.authenticate(username, password: password)
-        waManager.downloadMembers { (json) -> Void in
+        waManager.downloadAllContacts { (json) -> Void in
             if let response = json {
                 let db = Database.sharedDatabase
-                db.importMembers(fromResponseDict: response)
+                db.importMembers(contacts: response)
                 
                 NotificationCenter.default.post(name: Notification.Name(rawValue: "MembersQueryDidChange"), object: self, userInfo: ["members" : db.allMembers()])
             }

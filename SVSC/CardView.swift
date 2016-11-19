@@ -94,7 +94,7 @@ class CardView : NSView {
                     break
                 case 320364:
                     switch membership.level.type {
-                    case .Regular, .Regular_Service, .Senior, .Life:
+                    case .Regular, .Senior, .Life:
                         rso = printRSO
                         break
                     default:
@@ -187,7 +187,7 @@ class CardView : NSView {
             let prefix = membership.level.type.className()
             
             switch membership.level.type {
-            case .Regular, .Regular_Service, .Life, .Disabled_Veteran, .SVPD, .Seaside, .Youth, .Senior:
+            case .Regular, .Life, .Disabled_Veteran, .SVPD, .Seaside, .Youth, .Senior:
                 header = "Member"
                 break
             case .Applicant, .Probationary, .Youth_Probationary:

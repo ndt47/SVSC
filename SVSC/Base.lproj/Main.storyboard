@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="16A320" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="jGA-0Y-lOj">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="16B2555" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="jGA-0Y-lOj">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11201"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11542"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--Application-->
@@ -23,8 +24,7 @@
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="VOq-y0-SEH"/>
                                         <menuItem title="Preferences…" keyEquivalent="," id="BOF-NM-1cW"/>
-                                        <menuItem title="Load Members..." id="GTB-0c-ctL">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                        <menuItem title="Load Members..." keyEquivalent="R" id="GTB-0c-ctL">
                                             <connections>
                                                 <action selector="loadMembers:" target="Ady-hI-5gd" id="Or7-WL-dbF"/>
                                             </connections>
@@ -631,6 +631,18 @@
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="runToolbarCustomizationPalette:" target="Ady-hI-5gd" id="pQI-g3-MTW"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
+                            <menuItem title="Member" id="mRG-wC-v6K" userLabel="Member">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Member" id="fg3-E3-1Vc">
+                                    <items>
+                                        <menuItem title="Refresh" keyEquivalent="r" id="SVQ-yB-Igg" userLabel="Refresh">
+                                            <connections>
+                                                <action selector="refresh:" target="Ady-hI-5gd" id="7yD-nn-ONr"/>
                                             </connections>
                                         </menuItem>
                                     </items>

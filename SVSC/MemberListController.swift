@@ -174,6 +174,18 @@ class MemberListController: NSViewController, URLSessionDelegate, URLSessionData
         printOp.run()
     }
     
+    @IBAction func refresh(_ sender: AnyObject?) -> Void {
+        let group = DispatchGroup()
+        
+        for member in selectedMembers {
+            group.enter()
+            member.update(group.leave)
+        }
+        group.notify(queue: DispatchQueue.main, work: DispatchWorkItem(block: {
+            self.tableView?.reloadData()
+        }))
+    }
+    
     override func prepare(for segue: NSStoryboardSegue, sender: Any?) {
         guard let identifier = segue.identifier else {
             return

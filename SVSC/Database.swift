@@ -68,11 +68,11 @@ class Database {
                 db.userVersion = 1
                 fallthrough
             case 1:
-                try db.run(members.table.addColumn(members.gate_id, defaultValue: nil))
-                try db.run(members.table.createIndex(members.level))
-                try db.run(members.table.createIndex(members.gate_card))
-                try db.run(members.table.createIndex(members.gate_id))
-                try gate_access.create(db)
+                try _ = db.run(members.table.addColumn(members.gate_id, defaultValue: nil))
+                try _ = db.run(members.table.createIndex(members.level))
+                try _ = db.run(members.table.createIndex(members.gate_card))
+                try _ = db.run(members.table.createIndex(members.gate_id))
+                try _ = gate_access.create(db)
                 
                 db.userVersion = 2
                 break
@@ -145,7 +145,7 @@ class Database {
 extension Connection {
     public var userVersion: Int {
         get { return Int(try! scalar("PRAGMA user_version") as! Int64) }
-        set { try! run("PRAGMA user_version = \(newValue)") }
+        set { try! _ = run("PRAGMA user_version = \(newValue)") }
     }
 }
 

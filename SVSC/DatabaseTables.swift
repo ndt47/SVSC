@@ -34,7 +34,7 @@ class ContactsTable : DatabaseTable {
     
     func create(_ db: Connection) throws -> Void {
         do {
-            try db.run( table.create { t -> Void in
+            try _ = db.run( table.create { t -> Void in
                 t.column(id, primaryKey: true)
                 t.column(first_name)
                 t.column(middle_name)
@@ -59,7 +59,7 @@ class ContactsTable : DatabaseTable {
         }
     }
     func insert(_ db: Connection, item: T) throws -> Int64 {
-        let insert = table.insert(id <- item.id, first_name <- item.first_name, middle_name <- item.middle_name, last_name <- item.last_name, preferred_name <- item.preferred_name, address1 <- item.address1, address2 <- item.address2, city <- item.city, state <- item.state, zip <- item.zip, birth_date <- item.birth_date, email <- item.email, alt_email <- item.alt_email, home_phone <- item.home_phone, work_phone <- item.work_phone, mobile_phone <- item.mobile_phone, gender <- item.gender?.rawValue)
+        let insert = table.insert(or: OnConflict.Replace, id <- item.id, first_name <- item.first_name, middle_name <- item.middle_name, last_name <- item.last_name, preferred_name <- item.preferred_name, address1 <- item.address1, address2 <- item.address2, city <- item.city, state <- item.state, zip <- item.zip, birth_date <- item.birth_date, email <- item.email, alt_email <- item.alt_email, home_phone <- item.home_phone, work_phone <- item.work_phone, mobile_phone <- item.mobile_phone, gender <- item.gender?.rawValue)
         do {
             let row = try db.run( insert )
             guard row > 0 else {
@@ -103,7 +103,7 @@ class NotesTable : DatabaseTable {
     
     func create(_ db: Connection) throws -> Void {
         do {
-            try db.run( table.create { t -> Void in
+            try _ = db.run( table.create { t -> Void in
                 t.column(contact_id)
                 t.column(text)
                 t.column(date)
@@ -111,7 +111,7 @@ class NotesTable : DatabaseTable {
         } catch _ {}
     }
     func insert(_ db: Connection, item: T) throws -> Int64 {
-        let insert = table.insert(contact_id <- item.contact_id, text <- item.text, date <- item.date)
+        let insert = table.insert(or: OnConflict.Replace, contact_id <- item.contact_id, text <- item.text, date <- item.date)
         do {
             let row = try db.run(insert)
             guard row > 0 else {
@@ -152,7 +152,7 @@ class SponsorTable : DatabaseTable {
     
     func create(_ db: Connection) throws -> Void {
         do {
-            try db.run( table.create { t -> Void in
+            try _ = db.run( table.create { t -> Void in
                 t.column(contact_id, primaryKey: true)
                 t.column(name)
                 t.column(id)
@@ -161,7 +161,7 @@ class SponsorTable : DatabaseTable {
         } catch _ {}
     }
     func insert(_ db: Connection, item: T) throws -> Int64 {
-        let insert = table.insert(contact_id <- item.contact_id, name <- item.name, id <- item.id, email <- item.email)
+        let insert = table.insert(or: OnConflict.Replace, contact_id <- item.contact_id, name <- item.name, id <- item.id, email <- item.email)
         do {
             let row = try db.run(insert)
             guard row > 0 else {
@@ -201,7 +201,7 @@ class NRAMembershipTable : DatabaseTable {
     
     func create(_ db: Connection) throws -> Void {
         do {
-            try db.run( table.create { t -> Void in
+            try _ = db.run( table.create { t -> Void in
                 t.column(contact_id)
                 t.column(id)
                 t.column(exp_date)
@@ -209,7 +209,7 @@ class NRAMembershipTable : DatabaseTable {
         } catch _ {}
     }
     func insert(_ db: Connection, item: T) throws -> Int64 {
-        let insert = table.insert(contact_id <- item.contact_id, id <- item.id, exp_date <- item.exp_date)
+        let insert = table.insert(or: OnConflict.Replace, contact_id <- item.contact_id, id <- item.id, exp_date <- item.exp_date)
         do {
             let row = try db.run(insert)
             guard row > 0 else {
@@ -269,7 +269,7 @@ class MembershipTable : DatabaseTable {
     
     func create(_ db: Connection) throws -> Void {
         do {
-            try db.run( table.create { t -> Void in
+            try _ = db.run( table.create { t -> Void in
                 t.column(contact_id, primaryKey: true)
                 t.column(member_id)
                 t.column(level)
@@ -297,7 +297,7 @@ class MembershipTable : DatabaseTable {
     }
     func insert(_ db: Connection, item: T) throws -> Int64 {
         
-        let insert = table.insert(
+        let insert = table.insert(or: OnConflict.Replace,
             contact_id <- item.contact_id,
             member_id <- item.member_id,
             level <- item.level.id,
@@ -377,7 +377,7 @@ class LevelsTable : DatabaseTable {
     
     func create(_ db: Connection) throws -> Void {
         do {
-            try db.run( table.create { t -> Void in
+            try _ = db.run( table.create { t -> Void in
                 t.column(id, primaryKey: true)
                 t.column(type)
                 t.column(url)
@@ -385,7 +385,7 @@ class LevelsTable : DatabaseTable {
         } catch _ {}
     }
     func insert(_ db: Connection, item: T) throws -> Int64 {
-        let insert = table.insert(id <- item.id, type <- item.type.rawValue, url <- item.url)
+        let insert = table.insert(or: OnConflict.Replace, id <- item.id, type <- item.type.rawValue, url <- item.url)
         do {
             let row = try db.run(insert)
             guard row > 0 else {
@@ -425,7 +425,7 @@ class GroupsTable : DatabaseTable {
     
     func create(_ db: Connection) throws {
         do {
-            try db.run( table.create(block: { (t) -> Void in
+            try _ = db.run( table.create(block: { (t) -> Void in
                 t.column(contact_id)
                 t.column(id)
                 t.column(name)
@@ -434,7 +434,7 @@ class GroupsTable : DatabaseTable {
     }
     
     func insert(_ db: Connection, item: T) throws -> Int64 {
-        let insert = table.insert(contact_id <- item.contact_id, id <- item.id, name <- item.name)
+        let insert = table.insert(or: OnConflict.Replace, contact_id <- item.contact_id, id <- item.id, name <- item.name)
         do {
             let row = try db.run(insert)
             guard row > 0 else {
@@ -477,7 +477,7 @@ class GateAccessTable : DatabaseTable {
     
     func create(_ db: Connection) throws {
         do {
-            try db.run( table.create(block: { (t) -> Void in
+            try _ = db.run( table.create(block: { (t) -> Void in
                 t.column(id)
                 t.column(name)
                 t.column(gate)
@@ -488,7 +488,7 @@ class GateAccessTable : DatabaseTable {
     }
     
     func insert(_ db: Connection, item: T) throws -> Int64 {
-        let insert = table.insert(
+        let insert = table.insert(or: OnConflict.Replace, 
             id <- item.id,
             name <- item.name,
             gate <- item.gate.rawValue,

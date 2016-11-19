@@ -20,11 +20,11 @@ class Group {
     }
     
     func wait() -> Void {
-        group.wait(timeout: DispatchTime.distantFuture)
+        _ = group.wait(timeout: DispatchTime.distantFuture)
     }
     
     func wait(_ seconds: Double) -> Void {
-        group.wait(timeout: DispatchTime.now() + Double(Int64(seconds * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC))
+        _ = group.wait(timeout: DispatchTime.now() + Double(Int64(seconds * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC))
     }
     
     func notify(_ block: @escaping ()->()) -> Void {

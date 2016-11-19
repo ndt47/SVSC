@@ -54,7 +54,6 @@ typealias Sponsor = (
 
 enum MembershipType: String {
     case Regular = "Regular - Adult"
-    case Regular_Service = "Regular + Service Obligation Fee - Adult"
     case Probationary = "Member - Probationary"
     case Youth = "Youth"
     case Senior = "Senior"
@@ -68,7 +67,7 @@ enum MembershipType: String {
     
     func shortName() -> String? {
         switch self {
-        case .Regular, .Regular_Service:
+        case .Regular:
             return "Regular"
         case .Youth:
             return "Youth"
@@ -94,7 +93,7 @@ enum MembershipType: String {
     }
     func className() -> String? {
         switch self {
-        case .Regular, .Regular_Service, .Probationary, .Applicant:
+        case .Regular, .Probationary, .Applicant:
             return "Regular"
         case .Youth, .Youth_Probationary:
             return "Youth"

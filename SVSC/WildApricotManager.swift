@@ -94,7 +94,7 @@ class WildApricotManager : NSObject, URLSessionDelegate {
         }
     }
 
-    func downloadMembers(_ completion: @escaping ((_ json: [String: AnyObject]?) -> Void)) -> Void {
+    func downloadAllContacts(_ completion: @escaping ((_ json: [[String: AnyObject]]?) -> Void)) -> Void {
         self.queue.async { () -> Void in
             let group = Group()
             let session = Foundation.URLSession(configuration: self.configuration, delegate: self, delegateQueue: nil)
@@ -103,54 +103,29 @@ class WildApricotManager : NSObject, URLSessionDelegate {
             if let path = urlComponents?.path {
                 urlComponents?.path = path + "Contacts"
             }
-//            urlComponents?.queryItems = [URLQueryItem(name: "$async", value: "false")]
+            urlComponents?.queryItems = [URLQueryItem(name: "$async", value: "false")]
             
             guard let url = urlComponents?.url else {
                 return
             }
-            var result: [String : AnyObject]? = nil
+            var result: [[String : AnyObject]]? = nil
             
             group.enter({ (done) -> Void in
                 let task = session.dataTask(with: URLRequest(url: url), completionHandler: { (data, response, error) -> Void in
-                    guard let _ = data else {
+                    guard let d = data else {
                         print("DATA NIL")
                         done()
                         return
                     }
                     
-                    guard let dict = try? JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions(rawValue: 0)) as! [String: AnyObject] else {
+                    guard let dict = try? JSONSerialization.jsonObject(with: d, options: JSONSerialization.ReadingOptions(rawValue: 0)) as! [String: AnyObject] else {
                         print("COULD NOT READ JSON")
                         done()
                         return
                     }
                     
-                    if let resultURLString = dict["ResultUrl"] as? String, let resultURL = URL(string: resultURLString) {
-                        group.enter({ (leave) in
-                            
-                            let task = session.dataTask(with: URLRequest(url: resultURL), completionHandler: { (data, response, error) in
-                                
-                                guard let _ = data else {
-                                    print("DATA NIL")
-                                    done()
-                                    return
-                                }
-                                
-                                guard let dict = try? JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions(rawValue: 0)) as! [String: AnyObject] else {
-                                    print("COULD NOT READ JSON")
-                                    done()
-                                    return
-                                }
-                                
-                                result = dict
-                                
-                                leave()
-                            })
-
-                            self.queue.asyncAfter(deadline: DispatchTime.now() + 240.0, execute: {
-                                task.resume()
-                            })
-                        })
-                    }
+                    result = dict["Contacts"] as? [[String: AnyObject]]
+                    
                     done()
                 })
                 task.resume()
@@ -160,6 +135,48 @@ class WildApricotManager : NSObject, URLSessionDelegate {
             })
         }
     }
+    
+    func downloadContact(_ contactID:Int, completion: @escaping ((_ json: [String: AnyObject]?) -> Void)) -> Void {
+        self.queue.async { () -> Void in
+            let group = Group()
+            let session = Foundation.URLSession(configuration: self.configuration, delegate: self, delegateQueue: nil)
+            
+            var urlComponents = URLComponents(url: self.baseURL, resolvingAgainstBaseURL: false)
+            if let path = urlComponents?.path {
+                urlComponents?.path = path + "Contacts" + "/" + "\(contactID)"
+            }
+            urlComponents?.queryItems = [URLQueryItem(name: "$async", value: "false")]
+            
+            guard let url = urlComponents?.url else {
+                return
+            }
+            var result: [String : AnyObject]? = nil
+            
+            group.enter({ (done) -> Void in
+                let task = session.dataTask(with: URLRequest(url: url), completionHandler: { (data, response, error) -> Void in
+                    guard let d = data else {
+                        print("DATA NIL")
+                        done()
+                        return
+                    }
+                    
+                    guard let dict = try? JSONSerialization.jsonObject(with: d, options: JSONSerialization.ReadingOptions(rawValue: 0)) as! [String: AnyObject] else {
+                        print("COULD NOT READ JSON")
+                        done()
+                        return
+                    }
+                    
+                    result = dict
+                    done()
+                })
+                task.resume()
+            })
+            group.notify({ () -> Void in
+                completion(result)
+            })
+        }
+    }
+
     
     func downloadEvents(_ completion: @escaping ((_ events: [ClubEvent]) -> Void)) -> Void {
         self.queue.async { () -> Void in

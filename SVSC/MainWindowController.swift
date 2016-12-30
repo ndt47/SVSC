@@ -81,6 +81,8 @@ class MainWindowController : NSWindowController {
                 dest.members = members
             }
             break
+        case "newEventWindow":
+            break
         default:
             break
         }
@@ -90,13 +92,15 @@ class MainWindowController : NSWindowController {
         switch identifier {
         case "showBadgesWindow":
             return self.memberListController?.selectedMembers.count > 0
+        case "newEventWindow":
+            return true
         default:
             return true
         }
     }
 
     fileprivate var password = "w1ll1amg1bs0n"
-    fileprivate var username = "nathantaylor@me.com"
+    fileprivate var username = "secretary@scottsvalleysportsmen.com"
     
     @IBAction func loadMembers(_ sender: AnyObject) -> Void {
         let waManager = WildApricotManager.sharedManager
@@ -120,6 +124,10 @@ class MainWindowController : NSWindowController {
             print("\(url)")
             Database.sharedDatabase.importGateLogs(url, gate: Gate.Lower)
         }
+    }
+    
+    @IBAction func newEvent(_ sender: Any?) -> Void {
+        
     }
 }
 

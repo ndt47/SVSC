@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 48;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -26,6 +26,10 @@
 		D82D45F01C91294F00535EC4 /* DatabaseCSV.swift in Sources */ = {isa = PBXBuildFile; fileRef = D82D45EF1C91294F00535EC4 /* DatabaseCSV.swift */; };
 		D82D45F21C91297400535EC4 /* DatabaseJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = D82D45F11C91297400535EC4 /* DatabaseJSON.swift */; };
 		D83824E11D8D88EC00AC4DAD /* CSwiftV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8282E7F1C8FC5380007DC2B /* CSwiftV.framework */; };
+		D84277EF1E0DABE200A74CB3 /* CardReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8D238451C8B142F0039F85B /* CardReader.swift */; };
+		D84277FD1E0DD29500A74CB3 /* Event.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D84277FC1E0DD29500A74CB3 /* Event.storyboard */; };
+		D84278001E0DDF0200A74CB3 /* EventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D84277FF1E0DDF0200A74CB3 /* EventViewController.swift */; };
+		D84278021E0DDF1100A74CB3 /* EventWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D84278011E0DDF1100A74CB3 /* EventWindowController.swift */; };
 		D89D1A701D8D1BE10016B61A /* SQLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D82D45E01C8FC56600535EC4 /* SQLite.framework */; };
 		D8B173BB1C8BA300000F43F8 /* SplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8B173BA1C8BA300000F43F8 /* SplitViewController.swift */; };
 		D8D2383A1C8B0D490039F85B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D8D2383C1C8B0D490039F85B /* Main.storyboard */; };
@@ -188,6 +192,10 @@
 		D82D45ED1C8FCA9A00535EC4 /* DatabaseTables.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatabaseTables.swift; sourceTree = "<group>"; };
 		D82D45EF1C91294F00535EC4 /* DatabaseCSV.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatabaseCSV.swift; sourceTree = "<group>"; };
 		D82D45F11C91297400535EC4 /* DatabaseJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatabaseJSON.swift; sourceTree = "<group>"; };
+		D84277FB1E0DAFB500A74CB3 /* SVSC.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SVSC.entitlements; sourceTree = "<group>"; };
+		D84277FC1E0DD29500A74CB3 /* Event.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Event.storyboard; sourceTree = "<group>"; };
+		D84277FF1E0DDF0200A74CB3 /* EventViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventViewController.swift; sourceTree = "<group>"; };
+		D84278011E0DDF1100A74CB3 /* EventWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventWindowController.swift; sourceTree = "<group>"; };
 		D8B173BA1C8BA300000F43F8 /* SplitViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SplitViewController.swift; sourceTree = "<group>"; };
 		D8D2383B1C8B0D490039F85B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		D8D2383D1C8B0DBF0039F85B /* PCSC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PCSC.framework; path = System/Library/Frameworks/PCSC.framework; sourceTree = SDKROOT; };
@@ -253,10 +261,12 @@
 		D82796741C8B0BD900D08789 /* SVSC */ = {
 			isa = PBXGroup;
 			children = (
+				D84277FB1E0DAFB500A74CB3 /* SVSC.entitlements */,
 				D82796751C8B0BD900D08789 /* AppDelegate.swift */,
 				D8282E6A1C8DCE030007DC2B /* Database */,
 				D8282E691C8DCDE00007DC2B /* Main Window */,
 				D8282E681C8DCDCD0007DC2B /* Print Cards Window */,
+				D84277FE1E0DDED500A74CB3 /* Event WIndow */,
 				D8282E6B1C8DCE180007DC2B /* Utilities */,
 				D82796BD1C8B0C2F00D08789 /* CardView.swift */,
 				D8D238501C8B84F60039F85B /* CredentialView.swift */,
@@ -379,6 +389,16 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		D84277FE1E0DDED500A74CB3 /* Event WIndow */ = {
+			isa = PBXGroup;
+			children = (
+				D84277FF1E0DDF0200A74CB3 /* EventViewController.swift */,
+				D84278011E0DDF1100A74CB3 /* EventWindowController.swift */,
+				D84277FC1E0DD29500A74CB3 /* Event.storyboard */,
+			);
+			name = "Event WIndow";
+			sourceTree = "<group>";
+		};
 		D8D2383F1C8B0DC70039F85B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -468,6 +488,14 @@
 					D82796711C8B0BD900D08789 = {
 						CreatedOnToolsVersion = 7.2.1;
 						LastSwiftMigration = 0800;
+						SystemCapabilities = {
+							com.apple.Keychain = {
+								enabled = 0;
+							};
+							com.apple.Sandbox = {
+								enabled = 1;
+							};
+						};
 					};
 					D82796821C8B0BD900D08789 = {
 						CreatedOnToolsVersion = 7.2.1;
@@ -482,7 +510,7 @@
 				};
 			};
 			buildConfigurationList = D827966D1C8B0BD900D08789 /* Build configuration list for PBXProject "SVSC" */;
-			compatibilityVersion = "Xcode 3.2";
+			compatibilityVersion = "Xcode 8.0";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -615,6 +643,7 @@
 				D8D238491C8B23CC0039F85B /* R03 09 - ALERT01 - Synths Massive_A.wav in Resources */,
 				D8282E5A1C8DB5A00007DC2B /* PrintCards.storyboard in Resources */,
 				D8279CFD1C8B0C9A00D08789 /* Assets.xcassets in Resources */,
+				D84277FD1E0DD29500A74CB3 /* Event.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -640,8 +669,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				D8D2384F1C8B64840039F85B /* WildApricotManager.swift in Sources */,
+				D84278001E0DDF0200A74CB3 /* EventViewController.swift in Sources */,
 				D82796BA1C8B0C1A00D08789 /* DatabaseTypes.swift in Sources */,
 				D8D2384D1C8B5C5E0039F85B /* MemberDetailController.swift in Sources */,
+				D84277EF1E0DABE200A74CB3 /* CardReader.swift in Sources */,
 				D8D2384B1C8B5BF60039F85B /* QueryListController.swift in Sources */,
 				D82D45F21C91297400535EC4 /* DatabaseJSON.swift in Sources */,
 				D82796B91C8B0C1A00D08789 /* Database.swift in Sources */,
@@ -658,6 +689,7 @@
 				D8282E611C8DBD190007DC2B /* PrintCardsView.swift in Sources */,
 				D8D238511C8B84F60039F85B /* CredentialView.swift in Sources */,
 				D8B173BB1C8BA300000F43F8 /* SplitViewController.swift in Sources */,
+				D84278021E0DDF1100A74CB3 /* EventWindowController.swift in Sources */,
 				D82D45F01C91294F00535EC4 /* DatabaseCSV.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -805,9 +837,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = SVSC/SVSC.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = SVSC/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				PRODUCT_BUNDLE_IDENTIFIER = com.scottsvalleysportsmen.SVSC;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "SVSC/SVSC-Bridging-Header.h";
@@ -821,9 +855,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = SVSC/SVSC.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = SVSC/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				PRODUCT_BUNDLE_IDENTIFIER = com.scottsvalleysportsmen.SVSC;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "SVSC/SVSC-Bridging-Header.h";

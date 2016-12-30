@@ -308,7 +308,7 @@ class Member : NSObject {
     func update(_ completion:@escaping ()->Void) {
         let mgr = WildApricotManager.sharedManager
         
-        mgr.authenticate("nathantaylor@me.com", password: "w1ll1amg1bs0n")
+        mgr.authenticate("secretary@scottsvalleysportsmen.com", password: "w1ll1amg1bs0n")
         mgr.downloadContact(self.contact.id) { (json: [String: AnyObject]?) in
             guard let entry = json else {
                 return

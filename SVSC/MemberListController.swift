@@ -24,40 +24,11 @@ class MemberListController: NSViewController, URLSessionDelegate, URLSessionData
     @IBOutlet weak var cardView: CardView?
     
     var members = [Member]()
-//    private let cardManager = CardManager()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         tableView?.reloadData()
-        
-//        let tv = self.tableView!
-//        weak var wSelf = self
-//        cardManager?.readProxCards({ (card) -> Void in
-//            var idx = 0
-//            var foundMember: Member? = nil
-//
-//            if let this = wSelf {
-//                for member in this.members {
-//                    if member.membership?.gate_card == card {
-//                        foundMember = member
-//                        break
-//                    }
-//                    idx++
-//                }
-//            }
-//            
-//            Swift.print("Gate card: \(card)")
-//            if let fm = foundMember {
-//                tv.selectRowIndexes(NSIndexSet(index: idx), byExtendingSelection: false)
-//                tv.scrollRowToVisible(idx)
-//                NSNotificationCenter.defaultCenter().postNotificationName("SelectedMembersDidChange", object: nil, userInfo: ["selectedMembers" : [fm]])
-//                let sound = NSSound(named: "R03 09 - ALERT01 - Synths Massive_A")
-//                sound?.play()
-//            }
-//
-//        })
-        
         NotificationCenter.default.addObserver(self, selector: #selector(MemberListController.membersListDidChange(_:)), name: NSNotification.Name(rawValue: "MembersQueryDidChange"), object: nil)
     }
     
@@ -210,4 +181,3 @@ class MemberListController: NSViewController, URLSessionDelegate, URLSessionData
         }
     }
 }
-

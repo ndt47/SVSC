@@ -148,7 +148,7 @@ typealias Membership = (
     status: MembershipStatus?,
     change_date: Date?,
     
-    gate_card: String?,
+    gate_card: Int?,
     gate_status: GateStatus?,
     holster: HolsterRating?,
     

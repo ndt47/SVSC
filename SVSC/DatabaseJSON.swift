@@ -164,6 +164,14 @@ extension Database {
                 }
             }
             
+            var gateCard: Int? = nil
+            if let cardString = fieldDict["Card Key Number"] as? String {
+                gateCard = Int(cardString, radix: 10)
+                if gateCard == nil || gateCard == 0 {
+                    print("FAILED TO INTERPRET CARD STRING \(cardString)")
+                }
+            }
+            
             member_membership = Membership(
                 contact_id: contact.id,
                 member_id: Int.fromAnyObject(fieldDict["Member ID #"]),
@@ -171,7 +179,7 @@ extension Database {
                 status: memStatus,
                 change_date: Date.fromAnyObject(fieldDict["Level last changed"]),
                 
-                gate_card: fieldDict["Card Key Number"] as? String,
+                gate_card: gateCard,
                 gate_status: gateStatus,
                 holster: holsterRating,
                 

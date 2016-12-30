@@ -222,6 +222,11 @@ class CardView : NSView {
                         photo.drawCenteredInRect(photoRect)
                     }
                 }
+                else if let path = Bundle.main.path(forResource: "\(member_id)", ofType: "JPG", inDirectory: "photos") {
+                    if let photo = NSImage(byReferencingFile: path) {
+                        photo.drawCenteredInRect(photoRect)
+                    }
+                }
             }
             else {
                 if let od = membership.orientation_date, let ped = membership.prob_exp_date {

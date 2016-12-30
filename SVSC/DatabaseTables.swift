@@ -249,7 +249,7 @@ class MembershipTable : DatabaseTable {
     let status = Expression<String?>("status")
     let change_date = Expression<Date?>("change_date")
     
-    let gate_card = Expression<String?>("gate_card")
+    let gate_card = Expression<Int?>("gate_card")
     let gate_status = Expression<String?>("gate_status")
     let gate_id = Expression<Int?>("gate_id")
     let holster = Expression<String?>("holster")

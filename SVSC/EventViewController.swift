@@ -10,12 +10,13 @@ import Foundation
 import Cocoa
 import CryptoTokenKit
 import SQLite
+import CSwiftV
 
 class EventViewController : NSViewController, NSTableViewDataSource, NSTableViewDelegate {
     @IBOutlet var nameView: NSTextField?
-    @IBOutlet var dateView: NSTextField?
-    @IBOutlet var fromView: NSTextField?
-    @IBOutlet var toView: NSTextField?
+    @IBOutlet var dateView: NSDatePicker?
+    @IBOutlet var fromView: NSDatePicker?
+    @IBOutlet var toView: NSDatePicker?
     @IBOutlet var registerMemberIDView: NSTextField?
     @IBOutlet var registerFirstNameView: NSTextField?
     @IBOutlet var registerLastNameView: NSTextField?
@@ -23,6 +24,9 @@ class EventViewController : NSViewController, NSTableViewDataSource, NSTableView
     @IBOutlet var registerButton: NSButton?
     @IBOutlet var registrantTableView: NSTableView?
     @IBOutlet var countLabel: NSTextField?
+    
+    let timeFormatter = DateFormatter()
+    let numberFormatter = NumberFormatter()
     
     @IBAction func checkin(_ sender: Any?) -> Void {
         let db = Database.sharedDatabase
@@ -38,8 +42,6 @@ class EventViewController : NSViewController, NSTableViewDataSource, NSTableView
                 .join(db.members.table, on: db.contacts.table[db.contacts.id] == db.members.table[db.members.contact_id])
                 .filter(db.members.table[db.members.member_id] == id)
                 .limit(1)
-
-
         }
         else {
             guard let fn = first else {
@@ -81,6 +83,13 @@ class EventViewController : NSViewController, NSTableViewDataSource, NSTableView
             registrantTableView?.insertRows(at: IndexSet([0]), withAnimation: .slideDown)
             registrantTableView?.endUpdates()
         }
+        
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2.0) {
+            self.registerMemberIDView?.stringValue = ""
+            self.registerLastNameView?.stringValue = ""
+            self.registerFirstNameView?.stringValue = ""
+            self.registerTypePopup?.selectItem(at: 0)
+        }
     }
     
     enum RegistrationType : Int, CustomStringConvertible {
@@ -109,7 +118,7 @@ class EventViewController : NSViewController, NSTableViewDataSource, NSTableView
         }
     }
     
-    class Registrant {
+    class Registrant : NSObject {
         struct Guest {
             let firstName: String
             let lastName: String
@@ -124,14 +133,16 @@ class EventViewController : NSViewController, NSTableViewDataSource, NSTableView
         init(member: Member) {
             self.member = member
             self.guest = nil
+            super.init()
         }
         
         init(first: String, last: String) {
             self.member = nil
             self.guest = Guest(firstName: first, lastName: last)
+            super.init()
         }
         
-        func value(forKey key: String) -> Any? {
+        override func value(forUndefinedKey key: String) -> Any? {
             switch key {
             case "registration_date":
                 return registrationDate
@@ -176,6 +187,10 @@ class EventViewController : NSViewController, NSTableViewDataSource, NSTableView
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        timeFormatter.dateStyle = .none
+        timeFormatter.timeStyle = .short
+        numberFormatter.numberStyle = .none
+
         registrantTableView?.reloadData()
         NotificationCenter.default.addObserver(self, selector: #selector(MemberListController.membersListDidChange(_:)), name: NSNotification.Name(rawValue: "MembersQueryDidChange"), object: nil)
     }
@@ -183,7 +198,11 @@ class EventViewController : NSViewController, NSTableViewDataSource, NSTableView
     override func viewDidAppear() {
         super.viewDidAppear()
         mgr?.addObserver(self, forKeyPath: "slotNames", options: [.new, .initial], context: nil)
-        
+        self.becomeFirstResponder()
+    }
+    
+    override var acceptsFirstResponder: Bool {
+        return true
     }
     
     override func viewDidDisappear() {
@@ -266,14 +285,18 @@ class EventViewController : NSViewController, NSTableViewDataSource, NSTableView
         guard let membership = fm.membership else {
             return
         }
-        Swift.print("Found Member(\(membership.member_id)) for Gate Card(\(card))")
+        Swift.print("Found Member(\(membership.member_id!)) for Gate Card(\(card))")
 
-        self.registerMemberIDView?.stringValue = String(describing: membership.member_id)
+        self.registerMemberIDView?.stringValue = String(describing: membership.member_id!)
         self.registerFirstNameView?.stringValue = fm.contact.first_name.capitalized
         self.registerLastNameView?.stringValue = fm.contact.last_name.capitalized
         self.registerTypePopup?.selectItem(withTag: RegistrationType.from(membershipType: membership.level.type).rawValue)
+        
         let sound = NSSound(named: "R03 09 - ALERT01 - Synths Massive_A")
-        sound?.play()
+        DispatchQueue.main.async {
+            self.checkin(nil)
+            sound?.play()
+        }
     }
 
     
@@ -285,11 +308,10 @@ class EventViewController : NSViewController, NSTableViewDataSource, NSTableView
     
     func tableView(_ tableView: NSTableView, objectValueFor tableColumn: NSTableColumn?, row: Int) -> Any? {
         let registrant = registrants[row]
-        var value: Any? = nil
         if let column = tableColumn  {
-            value = registrant.value(forKey: column.identifier)
+            return registrant.value(forKey: column.identifier)
         }
-        return value
+        return nil
     }
     
     func tableView(_ tableView: NSTableView, sortDescriptorsDidChange oldDescriptors: [NSSortDescriptor]) {
@@ -327,6 +349,74 @@ class EventViewController : NSViewController, NSTableViewDataSource, NSTableView
         if let index = slots.index(of: slot) {
             slot.removeObserver(self, forKeyPath: "state")
             slots.remove(at: index)
+        }
+    }
+    
+    func membersListDidChange(_ note: Notification) -> Void {
+    }
+    
+    func saveCSV(toURL url: URL) {
+        let keys = ["registration_date", "checkin_date", "member_id", "first_name", "last_name", "registration_type", "member_id", "member_level"]
+        let keyCount = keys.count
+        var csv = String()
+        let dateFormatter = ISO8601DateFormatter()
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .none
+        
+        for key in keys.enumerated() {
+            csv += key.element
+            if key.offset < (keyCount - 1)  {
+                csv += ", "
+            }
+        }
+        csv += "\n"
+        
+        for registrant in registrants {
+            for key in keys.enumerated() {
+                if let val = registrant.value(forKey: key.element) {
+                    if let s = val as? String {
+                        csv += s
+                    }
+                    else if let d = val as? Date {
+                        csv += dateFormatter.string(from: d)
+                    }
+                    else if let n = val as? NSNumber {
+                        csv += numberFormatter.string(from: n) ?? "\(n)"
+                    }
+                }
+                if key.offset < (keyCount - 1)  {
+                    csv += ", "
+                }
+            }
+            csv += "\n"
+        }
+        
+        do {
+            try csv.write(to: url, atomically: true, encoding: .utf8)
+        }
+        catch let e {
+            NSLog("Failed to write CSV to \(url): \(e)")
+        }
+    }
+    
+    @IBAction func save(_ sender: Any?) {
+        export(sender)
+    }
+    
+    @IBAction func export(_ sender: Any?) {
+        let formatter = ISO8601DateFormatter()
+        
+        let panel = NSSavePanel()
+        panel.allowedFileTypes = ["event"]
+        panel.allowsOtherFileTypes = false
+        panel.canCreateDirectories = true
+        panel.isExtensionHidden = false
+        panel.nameFieldStringValue = "\(nameView?.stringValue ?? "New Event")_\(formatter.string(from: dateView?.dateValue ?? Date()))"
+        
+        panel.beginSheetModal(for: self.view.window!) { (response) in
+            if let url = panel.url {
+                self.saveCSV(toURL: url)
+            }
         }
     }
 }

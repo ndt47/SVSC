@@ -56,7 +56,7 @@ class MemberListController: NSViewController, URLSessionDelegate, URLSessionData
         let badgeHeight: CGFloat = 2.0 * CGFloat(dpi)
         let _ = CGRect(x: contentRect.minX, y: contentRect.minY, width: badgeWidth, height: badgeHeight)
         
-        ctx.rotate(by: CGFloat(M_PI_2))
+        ctx.rotate(by: CGFloat(Double.pi / 2.0))
         ctx.endPDFPage()
         
         ctx.closePDF()

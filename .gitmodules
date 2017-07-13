@@ -4,3 +4,6 @@
 [submodule "SVSC/SQLite.swift"]
 	path = SVSC/SQLite.swift
 	url = https://github.com/stephencelis/SQLite.swift.git
+[submodule "Charts"]
+	path = Charts
+	url = https://github.com/danielgindi/Charts.git

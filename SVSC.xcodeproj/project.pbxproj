@@ -41,6 +41,9 @@
 		D8D238511C8B84F60039F85B /* CredentialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8D238501C8B84F60039F85B /* CredentialView.swift */; };
 		D8F689121CC52C20009DDDF8 /* photos in Resources */ = {isa = PBXBuildFile; fileRef = D8F689111CC52C20009DDDF8 /* photos */; };
 		D8F689141CD669CC009DDDF8 /* PrintMailingLabelsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8F689131CD669CC009DDDF8 /* PrintMailingLabelsViewController.swift */; };
+		D8F726161E55669D009BE13B /* Activity.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D8F726151E55669D009BE13B /* Activity.storyboard */; };
+		D8F726181E5566B2009BE13B /* ActivityWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8F726171E5566B2009BE13B /* ActivityWindowController.swift */; };
+		D8F7261A1E5566CE009BE13B /* ActivityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8F726191E5566CE009BE13B /* ActivityViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -208,6 +211,9 @@
 		D8D238501C8B84F60039F85B /* CredentialView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CredentialView.swift; sourceTree = "<group>"; };
 		D8F689111CC52C20009DDDF8 /* photos */ = {isa = PBXFileReference; lastKnownFileType = folder; name = photos; path = "../../../Google Drive/photos"; sourceTree = "<group>"; };
 		D8F689131CD669CC009DDDF8 /* PrintMailingLabelsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrintMailingLabelsViewController.swift; sourceTree = "<group>"; };
+		D8F726151E55669D009BE13B /* Activity.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Activity.storyboard; sourceTree = "<group>"; };
+		D8F726171E5566B2009BE13B /* ActivityWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityWindowController.swift; sourceTree = "<group>"; };
+		D8F726191E5566CE009BE13B /* ActivityViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -267,6 +273,7 @@
 				D8282E691C8DCDE00007DC2B /* Main Window */,
 				D8282E681C8DCDCD0007DC2B /* Print Cards Window */,
 				D84277FE1E0DDED500A74CB3 /* Event WIndow */,
+				D8F726091E55667C009BE13B /* Activity Window */,
 				D8282E6B1C8DCE180007DC2B /* Utilities */,
 				D82796BD1C8B0C2F00D08789 /* CardView.swift */,
 				D8D238501C8B84F60039F85B /* CredentialView.swift */,
@@ -415,6 +422,16 @@
 				D8279CFC1C8B0C9A00D08789 /* Assets.xcassets */,
 			);
 			name = Assets;
+			sourceTree = "<group>";
+		};
+		D8F726091E55667C009BE13B /* Activity Window */ = {
+			isa = PBXGroup;
+			children = (
+				D8F726151E55669D009BE13B /* Activity.storyboard */,
+				D8F726171E5566B2009BE13B /* ActivityWindowController.swift */,
+				D8F726191E5566CE009BE13B /* ActivityViewController.swift */,
+			);
+			name = "Activity Window";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -642,6 +659,7 @@
 				D8D2383A1C8B0D490039F85B /* Main.storyboard in Resources */,
 				D8D238491C8B23CC0039F85B /* R03 09 - ALERT01 - Synths Massive_A.wav in Resources */,
 				D8282E5A1C8DB5A00007DC2B /* PrintCards.storyboard in Resources */,
+				D8F726161E55669D009BE13B /* Activity.storyboard in Resources */,
 				D8279CFD1C8B0C9A00D08789 /* Assets.xcassets in Resources */,
 				D84277FD1E0DD29500A74CB3 /* Event.storyboard in Resources */,
 			);
@@ -676,8 +694,10 @@
 				D8D2384B1C8B5BF60039F85B /* QueryListController.swift in Sources */,
 				D82D45F21C91297400535EC4 /* DatabaseJSON.swift in Sources */,
 				D82796B91C8B0C1A00D08789 /* Database.swift in Sources */,
+				D8F7261A1E5566CE009BE13B /* ActivityViewController.swift in Sources */,
 				D82796B81C8B0C1A00D08789 /* MemberListController.swift in Sources */,
 				D8282E671C8DC1120007DC2B /* MainWindowController.swift in Sources */,
+				D8F726181E5566B2009BE13B /* ActivityWindowController.swift in Sources */,
 				D8282E6F1C8F22830007DC2B /* Member.swift in Sources */,
 				D8F689141CD669CC009DDDF8 /* PrintMailingLabelsViewController.swift in Sources */,
 				D8282E631C8DBD380007DC2B /* PrintCardsWindowController.swift in Sources */,

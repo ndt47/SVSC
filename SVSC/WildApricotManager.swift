@@ -262,7 +262,7 @@ class WildApricotManager : NSObject, URLSessionDelegate {
 //                                                    date: dateFormatter.dateFromString(reg["RegistrationDate"])!
 //                                                )
 //                                            }
-                                            print("\(dict)")
+                                            print("\(String(describing: dict))")
                                             
                                             done()
                                         })

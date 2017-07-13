@@ -669,6 +669,13 @@
                                                 <action selector="performZoom:" target="Ady-hI-5gd" id="DIl-cC-cCs"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="CkA-Vq-dJ4"/>
+                                        <menuItem title="Gate Activity" id="Fy9-5d-Wzh">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <segue destination="qxS-8V-nRo" kind="show" id="Gk1-Nj-r5Q"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem isSeparatorItem="YES" id="eu3-7i-yIM"/>
                                         <menuItem title="Bring All to Front" id="LE2-aR-0XJ">
                                             <modifierMask key="keyEquivalentModifierMask"/>
@@ -1311,6 +1318,15 @@
                 <controllerPlaceholder storyboardName="Event" id="Se8-Sh-Kfr" sceneMemberID="viewController"/>
                 <customObject id="XSG-G8-82K" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="321" y="-83"/>
+        </scene>
+        <!--Activity-->
+        <scene sceneID="hKw-lQ-skR">
+            <objects>
+                <controllerPlaceholder storyboardName="Activity" id="qxS-8V-nRo" sceneMemberID="viewController"/>
+                <customObject id="88l-c2-TIG" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="457" y="-88"/>
         </scene>
     </scenes>
     <resources>

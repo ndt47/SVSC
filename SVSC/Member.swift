@@ -276,6 +276,26 @@ class Member : NSObject {
         }
     }
     
+    
+    static func ==(lhs: Member, rhs: Member) -> Bool {
+        if let a = lhs.membership, let b = rhs.membership {
+            guard a.level == b.level else {
+                return false
+            }
+            if let a_id = a.member_id, let b_id = b.member_id, a_id == b_id {
+                return true
+            }
+        }
+        return lhs.contact.first_name.capitalized == rhs.contact.first_name.capitalized && lhs.contact.last_name.capitalized == rhs.contact.last_name.capitalized
+    }
+    
+    override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? Member else {
+            return false
+        }
+        return self == other
+    }
+    
     override func value(forUndefinedKey key: String) -> Any? {
         switch key {
         case "first_name":

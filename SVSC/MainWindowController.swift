@@ -120,9 +120,19 @@ class MainWindowController : NSWindowController {
     }
 
     @IBAction func importGateLogs(_ sender: AnyObject?) -> Void {
-        if let url = NSOpenPanel().selectUrl {
-            print("\(url)")
-            Database.sharedDatabase.importGateLogs(url, gate: Gate.Lower)
+        let panel = NSOpenPanel()
+        panel.resolvesAliases = true
+        panel.canChooseFiles = true
+        panel.canChooseDirectories = false
+        panel.allowsMultipleSelection = false
+        panel.allowedFileTypes = ["csv"]
+        panel.allowsOtherFileTypes = false
+        
+        panel.begin { (response) in
+            if let url = panel.url {
+                print("\(url)")
+                Database.sharedDatabase.importGateLogs(url, gate: Gate.Lower)
+            }
         }
     }
     

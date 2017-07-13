@@ -20,75 +20,111 @@ class EventViewController : NSViewController, NSTableViewDataSource, NSTableView
     @IBOutlet var registerMemberIDView: NSTextField?
     @IBOutlet var registerFirstNameView: NSTextField?
     @IBOutlet var registerLastNameView: NSTextField?
-    @IBOutlet var registerTypePopup: NSPopUpButton?
-    @IBOutlet var registerButton: NSButton?
     @IBOutlet var registrantTableView: NSTableView?
     @IBOutlet var countLabel: NSTextField?
     
     let timeFormatter = DateFormatter()
     let numberFormatter = NumberFormatter()
     
-    @IBAction func checkin(_ sender: Any?) -> Void {
-        let db = Database.sharedDatabase
-        let first = registerFirstNameView?.stringValue
-        let last = registerLastNameView?.stringValue
-        let type = RegistrationType(rawValue: registerTypePopup?.selectedItem?.tag ?? 0) ?? .guest
-        let now = Date()
-        var new: Registrant?
-        var query: QueryType? = nil
+    override func awakeFromNib() {
+        super.awakeFromNib()
         
-        if let text = registerMemberIDView?.stringValue, let id = Int(text, radix: 10) {
-            query = db.contacts.table
+    }
+
+    @IBAction func enterMemberID(_ sender: Any?) -> Void {
+        let db = Database.sharedDatabase
+        
+        guard let text = registerMemberIDView?.stringValue, let id = Int(text, radix: 10) else {
+            NSBeep()
+            return
+        }
+            
+        let query = db.contacts.table
                 .join(db.members.table, on: db.contacts.table[db.contacts.id] == db.members.table[db.members.contact_id])
                 .filter(db.members.table[db.members.member_id] == id)
-                .limit(1)
+            .limit(1)
+        
+        let members = db.membersForQuery(query)
+        guard let member = members.first else {
+            NSBeep()
+            return
+        }
+
+        self.checkIn(Registrant(member: member))
+    }
+    
+    @IBAction func enterName(_ sender: Any?) -> Void {
+        let first = registerFirstNameView?.stringValue
+        let last = registerLastNameView?.stringValue
+
+        if sender as? NSTextField == registerFirstNameView {
+            guard first != nil, first!.lengthOfBytes(using: .utf8) > 0 else {
+                return
+            }
+            guard last != nil, last!.lengthOfBytes(using: .utf8) > 0 else {
+                registerLastNameView?.becomeFirstResponder()
+                registerLastNameView?.lockFocus()
+                return
+            }
+        }
+        else if sender as? NSTextField == registerLastNameView {
+            guard last != nil, last!.lengthOfBytes(using: .utf8) > 0 else {
+                return
+            }
+            guard first != nil, first!.lengthOfBytes(using: .utf8) > 0 else {
+                registerFirstNameView?.becomeFirstResponder()
+                registerFirstNameView?.lockFocus()
+                return
+            }
+        }
+        
+        guard let fn = first else {
+            return
+        }
+        guard let ln = last else {
+            return
+        }
+        
+        let db = Database.sharedDatabase
+        let query = db.contacts.table
+            .join(db.members.table, on: db.contacts.table[db.contacts.id] == db.members.table[db.members.contact_id])
+            .filter(db.contacts.table[db.contacts.first_name].like(fn) && db.contacts.table[db.contacts.last_name].like(ln))
+            .limit(1)
+        
+        let members = db.membersForQuery(query)
+        if let member = members.first {
+            self.checkIn(Registrant(member: member))
         }
         else {
-            guard let fn = first else {
-                return
-            }
-            guard let ln = last else {
-                return
-            }
-            
-            switch type {
-            case .guest:
-                new = Registrant(first: fn, last: ln)
-            case .probationary, .member:
-                query = db.contacts.table
-                    .join(db.members.table, on: db.contacts.table[db.contacts.id] == db.members.table[db.members.contact_id])
-                    .filter(db.contacts.table[db.contacts.first_name].like(fn) && db.contacts.table[db.contacts.last_name].like(ln))
-                    .limit(1)
-            }
-            
+            self.checkIn(Registrant(first: fn, last: ln))
+        }
+    }
+    
+    fileprivate func checkIn(_ registrant: Registrant) -> Void {
+        guard !registrants.contains(registrant) else {
+            NSBeep()
+            return
         }
         
-        if let q = query {
-            let members = db.membersForQuery(q)
-            if let m = members.first {
-                new = Registrant(member: m)
-            }
+        let now = Date()
+
+        if registrant.registrationDate == nil {
+            registrant.registrationDate = now
         }
-        if new == nil, let fn = first, let ln = last {
-            new = Registrant(first: fn, last: ln)
-        }
+        registrant.checkinDate = now
         
-        if let n = new {
-            if n.registrationDate == nil {
-                n.registrationDate = now
-            }
-            n.checkinDate = now
-            registrantTableView?.beginUpdates()
-            registrants.insert(n, at: 0)
-            registrantTableView?.insertRows(at: IndexSet([0]), withAnimation: .slideDown)
-            registrantTableView?.endUpdates()
-        }
+        registrantTableView?.beginUpdates()
+        registrants.insert(registrant, at: 0)
+        registrantTableView?.insertRows(at: IndexSet([0]), withAnimation: .slideLeft)
+        registrantTableView?.endUpdates()
+        countLabel?.intValue = Int32(registrants.count)
         
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2.0) {
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1.0) {
             self.registerMemberIDView?.stringValue = ""
             self.registerLastNameView?.stringValue = ""
             self.registerFirstNameView?.stringValue = ""
-            self.registerTypePopup?.selectItem(at: 0)
+            self.registerMemberIDView?.becomeFirstResponder()
+            self.registerMemberIDView?.lockFocus()
         }
     }
     
@@ -96,11 +132,14 @@ class EventViewController : NSViewController, NSTableViewDataSource, NSTableView
         case guest = 0
         case member = 1
         case probationary = 2
+        case applicant = 3
         
         static func from(membershipType: MembershipType) -> RegistrationType {
             switch membershipType {
             case .Probationary, .Youth_Probationary:
                 return .probationary
+            case .Applicant:
+                return .applicant
             default:
                 return .member
             }
@@ -110,6 +149,8 @@ class EventViewController : NSViewController, NSTableViewDataSource, NSTableView
             switch self {
             case .guest:
                 return "Guest"
+            case .applicant:
+                return "Applicant"
             case .probationary:
                 return "Probationary"
             case .member:
@@ -122,6 +163,10 @@ class EventViewController : NSViewController, NSTableViewDataSource, NSTableView
         struct Guest {
             let firstName: String
             let lastName: String
+            
+            static func ==(lhs: Guest, rhs: Guest) -> Bool {
+                return lhs.firstName.lowercased() == rhs.firstName.lowercased() && lhs.lastName.lowercased() == rhs.lastName.lowercased()
+            }
         }
         
         let member : Member?
@@ -140,6 +185,23 @@ class EventViewController : NSViewController, NSTableViewDataSource, NSTableView
             self.member = nil
             self.guest = Guest(firstName: first, lastName: last)
             super.init()
+        }
+        
+        static func ==(lhs: Registrant, rhs: Registrant) -> Bool {
+            if let a = lhs.member, let b = rhs.member, a == b {
+                return true
+            }
+            if let a = lhs.guest, let b = rhs.guest, a == b {
+                return true
+            }
+            return false
+        }
+
+        override func isEqual(_ object: Any?) -> Bool {
+            guard let other = object as? Registrant else {
+                return false
+            }
+            return self == other
         }
         
         override func value(forUndefinedKey key: String) -> Any? {
@@ -192,11 +254,33 @@ class EventViewController : NSViewController, NSTableViewDataSource, NSTableView
         numberFormatter.numberStyle = .none
 
         registrantTableView?.reloadData()
+        countLabel?.intValue = Int32(registrants.count)
+        
         NotificationCenter.default.addObserver(self, selector: #selector(MemberListController.membersListDidChange(_:)), name: NSNotification.Name(rawValue: "MembersQueryDidChange"), object: nil)
     }
 
     override func viewDidAppear() {
         super.viewDidAppear()
+        
+        let now = Date()
+        let cal = Calendar.autoupdatingCurrent
+        dateView?.dateValue = now
+        
+        var components = cal.dateComponents([.calendar, .timeZone, .year, .month, .day, .hour], from: now)
+        components.minute = 0
+        components.second = 0
+        
+        if let d = components.date {
+            fromView?.dateValue = d
+        }
+        
+        if let h = components.hour {
+            components.hour = h + 1
+        }
+        if let d = components.date {
+            toView?.dateValue = d
+        }
+        
         mgr?.addObserver(self, forKeyPath: "slotNames", options: [.new, .initial], context: nil)
         self.becomeFirstResponder()
     }
@@ -275,27 +359,20 @@ class EventViewController : NSViewController, NSTableViewDataSource, NSTableView
             .order(db.members.table[db.members.member_id].asc)
             .limit(1)
         let members = db.membersForQuery(query)
-        guard members.count > 0 else {
+        guard let member = members.first else {
             // No matches
             Swift.print("No member found for Gate Card(\(card))")
+            NSBeep()
             return
         }
 
-        let fm = members[0]
-        guard let membership = fm.membership else {
+        guard let membership = member.membership else {
             return
         }
         Swift.print("Found Member(\(membership.member_id!)) for Gate Card(\(card))")
 
-        self.registerMemberIDView?.stringValue = String(describing: membership.member_id!)
-        self.registerFirstNameView?.stringValue = fm.contact.first_name.capitalized
-        self.registerLastNameView?.stringValue = fm.contact.last_name.capitalized
-        self.registerTypePopup?.selectItem(withTag: RegistrationType.from(membershipType: membership.level.type).rawValue)
-        
-        let sound = NSSound(named: "R03 09 - ALERT01 - Synths Massive_A")
         DispatchQueue.main.async {
-            self.checkin(nil)
-            sound?.play()
+            self.checkIn(Registrant(member: member))
         }
     }
 
@@ -312,6 +389,21 @@ class EventViewController : NSViewController, NSTableViewDataSource, NSTableView
             return registrant.value(forKey: column.identifier)
         }
         return nil
+    }
+        
+    func tableView(_ tableView: NSTableView, willDisplayCell cell: Any, for tableColumn: NSTableColumn?, row: Int)
+    {
+        guard let cell = cell as? NSTextFieldCell else {
+            return
+        }
+
+        switch row {
+        case 0:
+            cell.font = NSFont.boldSystemFont(ofSize: 18.0)
+        default:
+            cell.font = NSFont.systemFont(ofSize: 18.0)
+            break
+        }
     }
     
     func tableView(_ tableView: NSTableView, sortDescriptorsDidChange oldDescriptors: [NSSortDescriptor]) {

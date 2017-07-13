@@ -35,7 +35,7 @@ extension Database {
                 try _ = levels.insert(db, item: membershipLevel!)
             }
             catch let e {
-                print("Failed to insert level \(membershipLevel) \(e)")
+                print("Failed to insert level \(String(describing: membershipLevel)) \(e)")
             }
         }
         

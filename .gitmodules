@@ -1,9 +1,9 @@
-[submodule "SVSC/CSwiftV"]
-	path = SVSC/CSwiftV
+[submodule "CSwiftV"]
+	path = Submodules/CSwiftV
 	url = https://github.com/Daniel1of1/CSwiftV.git
-[submodule "SVSC/SQLite.swift"]
-	path = SVSC/SQLite.swift
+[submodule "SQLite.swift"]
+	path = Submodules/SQLite.swift
 	url = https://github.com/stephencelis/SQLite.swift.git
 [submodule "Charts"]
-	path = Charts
+	path = Submodules/Charts
 	url = https://github.com/danielgindi/Charts.git

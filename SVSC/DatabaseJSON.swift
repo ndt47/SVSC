@@ -15,6 +15,21 @@ extension Database {
         }
     }
     
+    func importEvents(events items: [ClubEvent]) {
+        guard let db = self.db else {
+            return
+        }
+
+        for item in items {
+            do {
+                try _ = events.insert(db, item: item)
+            }
+            catch let e {
+                print("Failed to insert event \(String(describing: item)) \(e)")
+            }
+        }
+    }
+    
     func importMember(_ entry: [String: AnyObject]) {
         guard let db = self.db else {
             return

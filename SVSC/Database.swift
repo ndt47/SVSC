@@ -39,6 +39,8 @@ class Database {
     let sponsors = SponsorTable()
     let groups =  GroupsTable()
     let gate_access = GateAccessTable()
+    let events = EventTable()
+    let registrations = EventRegistrationTable()
     
     init(path: String) {
         db = try? Connection(path)
@@ -75,13 +77,21 @@ class Database {
                 try _ = gate_access.create(db)
                 
                 db.userVersion = 2
+                fallthrough
+            case 2:
+                try events.create(db)
+                try registrations.create(db)
+                
+                db.userVersion = 3
                 break
             default:
                 throw DataBaseError.invalidVersion
             }
             
         }
-        catch _ {}
+        catch let e {
+            print("updateSchema failed \(e)")
+        }
     }
 
     func membersForQuery(_ query: QueryType) -> [Member] {

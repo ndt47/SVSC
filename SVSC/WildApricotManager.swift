@@ -227,7 +227,7 @@ class WildApricotManager : NSObject, URLSessionDelegate {
                                     guard let start = dateFormatter.date(from: session["StartDate"] as! String), let end = dateFormatter.date(from: session["EndDate"] as! String) else {
                                         continue
                                     }
-                                    let clubEvent = ClubEvent(
+                                    var clubEvent = ClubEvent(
                                         id: event_id,
                                         name: name,
                                         location: event["Location"]! as! String,
@@ -240,6 +240,12 @@ class WildApricotManager : NSObject, URLSessionDelegate {
                                         checked_in_attendees_count: event["CheckedInAttendeesNumber"] as! Int,
                                         url: event["Url"] as! String
                                     )
+                                    group.enter { (done) in
+                                        self.downloadRegistrations(for: clubEvent) { registrations in
+                                            clubEvent.registrations = registrations
+                                            done()
+                                        }
+                                    }
                                     results.append(clubEvent)
                                 }
                             }
@@ -251,7 +257,7 @@ class WildApricotManager : NSObject, URLSessionDelegate {
                                     continue
                                 }
                                 
-                                let clubEvent = ClubEvent(
+                                var clubEvent = ClubEvent(
                                     id: event_id,
                                     name: name,
                                     location: event["Location"]! as! String,
@@ -264,16 +270,21 @@ class WildApricotManager : NSObject, URLSessionDelegate {
                                     checked_in_attendees_count: event["CheckedInAttendeesNumber"] as! Int,
                                     url: event["Url"] as! String
                                 )
+                                group.enter { (done) in
+                                    self.downloadRegistrations(for: clubEvent) { registrations in
+                                        clubEvent.registrations = registrations
+                                        done()
+                                    }
+                                }
                                 results.append(clubEvent)
                             }
                         }
+                        done()
                     }
                     catch {
                         done()
                         return
                     }
-
-                    done()
                 })
                 task.resume()
             })
@@ -289,61 +300,71 @@ class WildApricotManager : NSObject, URLSessionDelegate {
     func URLSession(_ session: Foundation.URLSession, dataTask: URLSessionDataTask, didReceiveData data: Data) {
     }
     
-//    func downloadRegistrations(event: ClubEvent) {
-//
-//        if let  {
-//            for event in events {
-//                if let sessions = event["Sessions"]! as? [String:Any] {
-//                    for session in sessions {
-//
-//                    }
-//                }
-//                else {
-//                }
-//
-//
-//
-//
-//
-//                if clubEvent.registration_enabled && clubEvent.registration_count > 0 {
-//                    let registrations = [ClubEventRegistration]()
-//                    clubEvent.registrations = registrations
-//
-//                    var urlComponents = URLComponents(url: self.baseURL, resolvingAgainstBaseURL: false)
-//                    if let path = urlComponents?.path {
-//                        urlComponents?.path = path + "EventRegistrations"
-//                    }
-//                    urlComponents?.queryItems = [URLQueryItem(name: "eventID", value: String(clubEvent.id))]
-//
-//                    guard let url = urlComponents?.url else {
-//                        continue
-//                    }
-//
-//                    group.enter { (done) -> Void in
-//                        let task = session.dataTask(with: URLRequest(url: url), completionHandler: { (data, response, error) -> Void in
-//
-//                            guard let d = data, let result = (try? JSONSerialization.jsonObject(with: d, options: JSONSerialization.ReadingOptions(rawValue: 0))) as? [String:Any] else {
-//                                done()
-//                                return
-//                            }
-//
-//                            //                                            for reg in json {
-//                            //                                                let registration = ClubEventRegistration(
-//                            //                                                    event_id: clubEvent.id,
-//                            //                                                    registration_type_id: (reg["RegistrationType"] as! [String: AnyObject])["Id"] as! Int,
-//                            //                                                    contact_id:
-//                            //                                                    date: dateFormatter.dateFromString(reg["RegistrationDate"])!
-//                            //                                                )
-//                            //                                            }
-//                            print("\(String(describing: events))")
-//
-//                            done()
-//                        })
-//                        task.resume()
-//                    }
-//                }
-//            }
-//        }
-//
-//    }
+    func downloadRegistrations(for event: ClubEvent, completion: @escaping ([ClubEventRegistration])->Void) {
+        let group = Group()
+        var registrations = [ClubEventRegistration]()
+
+        if event.registration_count > 0 {
+            var urlComponents = URLComponents(url: self.baseURL, resolvingAgainstBaseURL: false)
+            if let path = urlComponents?.path {
+                urlComponents?.path = path + "EventRegistrations"
+            }
+            urlComponents?.queryItems = [URLQueryItem(name: "eventID", value: String(event.id))]
+            
+            guard let url = urlComponents?.url else {
+                return
+            }
+            
+            
+            group.enter { (done) -> Void in
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
+                dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+                dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+
+                let session = Foundation.URLSession(configuration: self.configuration, delegate: self, delegateQueue: nil)
+                let task = session.dataTask(with: URLRequest(url: url), completionHandler: { (data, response, error) -> Void in
+                    
+                    guard let d = data, let result = (try? JSONSerialization.jsonObject(with: d, options: JSONSerialization.ReadingOptions(rawValue: 0))) as? [[String:Any]] else {
+                        done()
+                        return
+                    }
+
+                    for reg in result {
+                        guard let regType = reg["RegistrationType"] as? [String:Any] else {
+                            continue
+                        }
+                        guard let contact = reg["Contact"] as? [String:Any] else {
+                            continue
+                        }
+                        guard let dateStr = reg["RegistrationDate"] as? String else {
+                            continue
+                        }
+                        guard let date = dateFormatter.date(from: dateStr) else {
+                            continue
+                        }
+                        let checkedIn = reg["CheckedIn"] as? Int ?? 0
+                        let paid = reg["IsPaid"] as? Int ?? 0
+
+                        let newReg = ClubEventRegistration(
+                            event_id: event.id,
+                            registration_type_id: regType["Id"] as? Int,
+                            contact_id: contact["Id"] as! Int,
+                            checked_in: checkedIn != 0,
+                            paid: paid != 0,
+                            date: date
+                        )
+                        registrations.append(newReg)
+                    }
+                    
+                    done()
+                })
+                task.resume()
+            }
+        }
+        
+        group.notify {
+            completion(registrations)
+        }
+    }
 }

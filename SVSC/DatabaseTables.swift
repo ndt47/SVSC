@@ -527,3 +527,174 @@ class GateAccessTable : DatabaseTable {
         return nil
     }
 }
+
+class EventTable : DatabaseTable {
+    typealias T = ClubEvent
+    
+    static let TABLE_NAME = "events"
+    let table = Table(TABLE_NAME)
+    
+    let id = Expression<Int>("id")
+    let name = Expression<String>("name")
+    let location = Expression<String>("location")
+    let start_date = Expression<Date>("start")
+    let end_date = Expression<Date>("end")
+    let registration_enabled = Expression<Bool>("registration_enabled")
+    let registration_limit = Expression<Int?>("registration_limit")
+    let registration_count = Expression<Int?>("registration_count")
+    let checked_in_count = Expression<Int>("checked_in_count")
+    let url = Expression<String>("url")
+
+    func create(_ db: Connection) throws {
+        do {
+            try _ = db.run( table.create(block: { (t) -> Void in
+                t.column(id)
+                t.column(name)
+                t.column(location)
+                t.column(start_date)
+                t.column(end_date)
+                t.column(registration_enabled)
+                t.column(registration_limit)
+                t.column(registration_count)
+                t.column(checked_in_count)
+                t.column(url)
+            }))
+        } catch _ {}
+    }
+    
+    func insert(_ db: Connection, item: T) throws -> Int64 {
+        if let registrations = item.registrations {
+            let regTable = EventRegistrationTable()
+            
+            for registration in registrations {
+                do {
+                    try _ = regTable.insert(db, item: registration)
+                }
+                catch let e {
+                    print("Failed to insert \(registration), error \(e)")
+                    continue
+                }
+            }
+        }
+        
+        let insert = table.insert(or: OnConflict.replace,
+                                  id <- item.id,
+                                  name <- item.name,
+                                  location <- item.location,
+                                  start_date <- item.start_date,
+                                  end_date <- item.end_date,
+                                  registration_enabled <- item.registration_enabled,
+                                  registration_limit <- item.registration_limit,
+                                  registration_count <- item.registration_count,
+                                  checked_in_count <- item.checked_in_attendees_count,
+                                  url <- item.url
+        )
+        do {
+            let row = try db.run(insert)
+            guard row > 0 else {
+                throw DataBaseError.insertError
+            }
+            return row
+        } catch _ {}
+        return 0
+    }
+    
+    func delete(_ db: Connection, item: T) throws {
+        
+    }
+    
+    func findAll(_ db: Connection) throws -> [T]? {
+        if let items = try? db.prepare(table) {
+            var results = [T]()
+            
+            for item in items {
+                let r = T(
+                    id: item[id],
+                    name: item[name],
+                    location: item[location],
+                    start_date: item[start_date],
+                    end_date: item[end_date],
+                    registration_enabled: item[registration_enabled],
+                    registration_limit: item[registration_limit],
+                    registrations: [],
+                    registration_count: item[registration_count],
+                    checked_in_attendees_count: item[checked_in_count],
+                    url: item[url])
+                results.append(r)
+            }
+            return results
+        }
+        return nil
+    }
+
+}
+
+class EventRegistrationTable : DatabaseTable {
+    typealias T = ClubEventRegistration
+    
+    static let TABLE_NAME = "event_registrations"
+    let table = Table(TABLE_NAME)
+    
+    let event_id = Expression<Int>("event_id")
+    let type_id = Expression<Int?>("registartion_type_id")
+    let contact_id = Expression<Int>("contact_id")
+    let checked_in = Expression<Bool>("checked_in")
+    let paid = Expression<Bool>("paid")
+    let date = Expression<Date>("date")
+    
+    func create(_ db: Connection) throws {
+        do {
+            try _ = db.run( table.create(block: { (t) -> Void in
+                t.column(event_id)
+                t.column(type_id)
+                t.column(contact_id)
+                t.column(checked_in)
+                t.column(paid)
+                t.column(date)
+            }))
+        } catch _ {}
+    }
+    
+    func insert(_ db: Connection, item: T) throws -> Int64 {
+        let insert = table.insert(or: OnConflict.replace,
+                                  event_id <- item.event_id,
+                                  type_id <- item.registration_type_id,
+                                  contact_id <- item.contact_id,
+                                  checked_in <- item.checked_in,
+                                  paid <- item.paid,
+                                  date <- item.date
+        )
+        do {
+            let row = try db.run(insert)
+            guard row > 0 else {
+                throw DataBaseError.insertError
+            }
+            return row
+        } catch _ {}
+        return 0
+    }
+    
+    func delete(_ db: Connection, item: T) throws {
+        
+    }
+    
+    func findAll(_ db: Connection) throws -> [T]? {
+        if let items = try? db.prepare(table) {
+            var results = [T]()
+            
+            for item in items {
+                let r = T(
+                    event_id: item[event_id],
+                    registration_type_id: item[type_id],
+                    contact_id: item[contact_id],
+                    checked_in: item[checked_in],
+                    paid: item[paid],
+                    date: item[date])
+                results.append(r)
+            }
+            return results
+        }
+        return nil
+    }
+    
+}

@@ -122,7 +122,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SVSC/DatabaseTables.swift"
-            timestampString = "521942943.939105"
+            timestampString = "522652375.738717"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "327"
@@ -156,11 +156,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SVSC/DatabaseJSON.swift"
-            timestampString = "504220804.907961"
+            timestampString = "522652375.738806"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "171"
-            endingLineNumber = "171"
+            startingLineNumber = "186"
+            endingLineNumber = "186"
             landmarkName = "importMember(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -184,27 +184,27 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SVSC/WildApricotManager.swift"
-            timestampString = "521942943.939496"
+            timestampString = "522652375.738886"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "198"
             endingLineNumber = "198"
-            landmarkName = "unknown"
-            landmarkType = "0">
+            landmarkName = "downloadEvents(_:)"
+            landmarkType = "7">
             <Locations>
                <Location
-                  shouldBeEnabled = "Yes"
+                  shouldBeEnabled = "No"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
                   symbolName = "closure #1 (() -&gt; ()) -&gt; () in closure #1 () -&gt; () in SVSC.WildApricotManager.downloadEvents((Swift.Array&lt;(id: Swift.Int, name: Swift.String, location: Swift.String, start_date: Foundation.Date, end_date: Foundation.Date, registration_enabled: Swift.Bool, registration_limit: Swift.Optional&lt;Swift.Int&gt;, registrations: Swift.Optional&lt;Swift.Array&lt;(event_id: Swift.Int, registration_type_id: Swift.Optional&lt;Swift.Int&gt;, contact_id: Swift.Int, checked_in: Swift.Bool, paid: Swift.Bool, date: Foundation.Date)&gt;&gt;, registration_count: Swift.Optional&lt;Swift.Int&gt;, checked_in_attendees_count: Swift.Int, url: Swift.String)&gt;) -&gt; ()) -&gt; ()"
                   moduleName = "SVSC"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/nathan/Documents/personal/SVSC/SVSC/WildApricotManager.swift"
-                  timestampString = "522646032.326222"
+                  timestampString = "522647621.940643"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "198"
@@ -212,14 +212,14 @@
                   offsetFromSymbolStart = "38">
                </Location>
                <Location
-                  shouldBeEnabled = "Yes"
+                  shouldBeEnabled = "No"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
                   symbolName = "closure #1 (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;__ObjC.URLResponse&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in closure #1 (() -&gt; ()) -&gt; () in closure #1 () -&gt; () in SVSC.WildApricotManager.downloadEvents((Swift.Array&lt;(id: Swift.Int, name: Swift.String, location: Swift.String, start_date: Foundation.Date, end_date: Foundation.Date, registration_enabled: Swift.Bool, registration_limit: Swift.Optional&lt;Swift.Int&gt;, registrations: Swift.Optional&lt;Swift.Array&lt;(event_id: Swift.Int, registration_type_id: Swift.Optional&lt;Swift.Int&gt;, contact_id: Swift.Int, checked_in: Swift.Bool, paid: Swift.Bool, date: Foundation.Date)&gt;&gt;, registration_count: Swift.Optional&lt;Swift.Int&gt;, checked_in_attendees_count: Swift.Int, url: Swift.String)&gt;) -&gt; ()) -&gt; ()"
                   moduleName = "SVSC"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/nathan/Documents/personal/SVSC/SVSC/WildApricotManager.swift"
-                  timestampString = "522646032.328126"
+                  timestampString = "522647621.943114"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "195"
@@ -232,33 +232,208 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SVSC/WildApricotManager.swift"
-            timestampString = "521942943.940356"
+            timestampString = "522652375.73895"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "199"
             endingLineNumber = "199"
-            landmarkName = "unknown"
-            landmarkType = "0">
+            landmarkName = "downloadEvents(_:)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SVSC/WildApricotManager.swift"
-            timestampString = "521943138.450897"
+            timestampString = "522652375.739009"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "224"
             endingLineNumber = "224"
-            landmarkName = "unknown"
-            landmarkType = "0">
+            landmarkName = "downloadEvents(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SVSC/WildApricotManager.swift"
+            timestampString = "522652375.739066"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "223"
+            endingLineNumber = "223"
+            landmarkName = "downloadEvents(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SVSC/WildApricotManager.swift"
+            timestampString = "522652375.739122"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "293"
+            endingLineNumber = "293"
+            landmarkName = "downloadEvents(_:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #2 () -&gt; () in closure #1 () -&gt; () in SVSC.WildApricotManager.downloadEvents((Swift.Array&lt;(id: Swift.Int, name: Swift.String, location: Swift.String, start_date: Foundation.Date, end_date: Foundation.Date, registration_enabled: Swift.Bool, registration_limit: Swift.Optional&lt;Swift.Int&gt;, registrations: Swift.Optional&lt;Swift.Array&lt;(event_id: Swift.Int, registration_type_id: Swift.Optional&lt;Swift.Int&gt;, contact_id: Swift.Int, checked_in: Swift.Bool, paid: Swift.Bool, date: Foundation.Date)&gt;&gt;, registration_count: Swift.Optional&lt;Swift.Int&gt;, checked_in_attendees_count: Swift.Int, url: Swift.String)&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "SVSC"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/nathan/Documents/personal/SVSC/SVSC/WildApricotManager.swift"
+                  timestampString = "522647913.633755"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "281"
+                  endingLineNumber = "281"
+                  offsetFromSymbolStart = "66">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (() -&gt; ()) -&gt; () in closure #2 () -&gt; () in closure #1 () -&gt; () in SVSC.WildApricotManager.downloadEvents((Swift.Array&lt;(id: Swift.Int, name: Swift.String, location: Swift.String, start_date: Foundation.Date, end_date: Foundation.Date, registration_enabled: Swift.Bool, registration_limit: Swift.Optional&lt;Swift.Int&gt;, registrations: Swift.Optional&lt;Swift.Array&lt;(event_id: Swift.Int, registration_type_id: Swift.Optional&lt;Swift.Int&gt;, contact_id: Swift.Int, checked_in: Swift.Bool, paid: Swift.Bool, date: Foundation.Date)&gt;&gt;, registration_count: Swift.Optional&lt;Swift.Int&gt;, checked_in_attendees_count: Swift.Int, url: Swift.String)&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "SVSC"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/nathan/Documents/personal/SVSC/SVSC/WildApricotManager.swift"
+                  timestampString = "522647913.635471"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "281"
+                  endingLineNumber = "281"
+                  offsetFromSymbolStart = "32">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Array&lt;(event_id: Swift.Int, registration_type_id: Swift.Optional&lt;Swift.Int&gt;, contact_id: Swift.Int, checked_in: Swift.Bool, paid: Swift.Bool, date: Foundation.Date)&gt;) -&gt; () in closure #1 (() -&gt; ()) -&gt; () in closure #2 () -&gt; () in closure #1 () -&gt; () in SVSC.WildApricotManager.downloadEvents((Swift.Array&lt;(id: Swift.Int, name: Swift.String, location: Swift.String, start_date: Foundation.Date, end_date: Foundation.Date, registration_enabled: Swift.Bool, registration_limit: Swift.Optional&lt;Swift.Int&gt;, registrations: Swift.Optional&lt;Swift.Array&lt;(event_id: Swift.Int, registration_type_id: Swift.Optional&lt;Swift.Int&gt;, contact_id: Swift.Int, checked_in: Swift.Bool, paid: Swift.Bool, date: Foundation.Date)&gt;&gt;, registration_count: Swift.Optional&lt;Swift.Int&gt;, checked_in_attendees_count: Swift.Int, url: Swift.String)&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "SVSC"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/nathan/Documents/personal/SVSC/SVSC/WildApricotManager.swift"
+                  timestampString = "522647913.637449"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "281"
+                  endingLineNumber = "281"
+                  offsetFromSymbolStart = "14">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SVSC/WildApricotManager.swift"
+            timestampString = "522652375.739184"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "304"
+            endingLineNumber = "304"
+            landmarkName = "downloadRegistrations(for:completion:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SVSC/WildApricotManager.swift"
+            timestampString = "522652375.73924"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "319"
+            endingLineNumber = "319"
+            landmarkName = "downloadRegistrations(for:completion:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "SVSC.WildApricotManager.downloadRegistrations(for: (id: Swift.Int, name: Swift.String, location: Swift.String, start_date: Foundation.Date, end_date: Foundation.Date, registration_enabled: Swift.Bool, registration_limit: Swift.Optional&lt;Swift.Int&gt;, registrations: Swift.Optional&lt;Swift.Array&lt;(event_id: Swift.Int, registration_type_id: Swift.Optional&lt;Swift.Int&gt;, contact_id: Swift.Int, checked_in: Swift.Bool, paid: Swift.Bool, date: Foundation.Date)&gt;&gt;, registration_count: Swift.Optional&lt;Swift.Int&gt;, checked_in_attendees_count: Swift.Int, url: Swift.String), completion: (Swift.Array&lt;(event_id: Swift.Int, registration_type_id: Swift.Optional&lt;Swift.Int&gt;, contact_id: Swift.Int, checked_in: Swift.Bool, paid: Swift.Bool, date: Foundation.Date)&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "SVSC"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/nathan/Documents/personal/SVSC/SVSC/WildApricotManager.swift"
+                  timestampString = "522647913.651803"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "321"
+                  endingLineNumber = "321"
+                  offsetFromSymbolStart = "2160">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (() -&gt; ()) -&gt; () in SVSC.WildApricotManager.downloadRegistrations(for: (id: Swift.Int, name: Swift.String, location: Swift.String, start_date: Foundation.Date, end_date: Foundation.Date, registration_enabled: Swift.Bool, registration_limit: Swift.Optional&lt;Swift.Int&gt;, registrations: Swift.Optional&lt;Swift.Array&lt;(event_id: Swift.Int, registration_type_id: Swift.Optional&lt;Swift.Int&gt;, contact_id: Swift.Int, checked_in: Swift.Bool, paid: Swift.Bool, date: Foundation.Date)&gt;&gt;, registration_count: Swift.Optional&lt;Swift.Int&gt;, checked_in_attendees_count: Swift.Int, url: Swift.String), completion: (Swift.Array&lt;(event_id: Swift.Int, registration_type_id: Swift.Optional&lt;Swift.Int&gt;, contact_id: Swift.Int, checked_in: Swift.Bool, paid: Swift.Bool, date: Foundation.Date)&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "SVSC"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/nathan/Documents/personal/SVSC/SVSC/WildApricotManager.swift"
+                  timestampString = "522647913.653576"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "322"
+                  endingLineNumber = "322"
+                  offsetFromSymbolStart = "29">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SVSC/WildApricotManager.swift"
+            timestampString = "522652375.739294"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "357"
+            endingLineNumber = "357"
+            landmarkName = "downloadRegistrations(for:completion:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SVSC/WildApricotManager.swift"
+            timestampString = "522652375.739349"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "334"
+            endingLineNumber = "334"
+            landmarkName = "downloadRegistrations(for:completion:)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -267,14 +442,14 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "SVSC/WildApricotManager.swift"
-            timestampString = "521943264.633936"
+            filePath = "SVSC/DatabaseTables.swift"
+            timestampString = "522652398.359072"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "223"
-            endingLineNumber = "223"
-            landmarkName = "unknown"
-            landmarkType = "0">
+            startingLineNumber = "570"
+            endingLineNumber = "570"
+            landmarkName = "insert(_:item:)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

@@ -115,7 +115,8 @@ class MainWindowController : NSWindowController {
             }
         }
         waManager.downloadEvents { (events) -> Void in
-            print("EVENTS \(events)")
+            let db = Database.sharedDatabase
+            db.importEvents(events: events)
         }
     }
 

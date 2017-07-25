@@ -122,7 +122,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SVSC/DatabaseTables.swift"
-            timestampString = "483339395.892797"
+            timestampString = "521942943.939105"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "327"
@@ -179,6 +179,102 @@
             endingLineNumber = "389"
             landmarkName = "tableView(_:objectValueFor:row:)"
             landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SVSC/WildApricotManager.swift"
+            timestampString = "521942943.939496"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "198"
+            endingLineNumber = "198"
+            landmarkName = "unknown"
+            landmarkType = "0">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (() -&gt; ()) -&gt; () in closure #1 () -&gt; () in SVSC.WildApricotManager.downloadEvents((Swift.Array&lt;(id: Swift.Int, name: Swift.String, location: Swift.String, start_date: Foundation.Date, end_date: Foundation.Date, registration_enabled: Swift.Bool, registration_limit: Swift.Optional&lt;Swift.Int&gt;, registrations: Swift.Optional&lt;Swift.Array&lt;(event_id: Swift.Int, registration_type_id: Swift.Optional&lt;Swift.Int&gt;, contact_id: Swift.Int, checked_in: Swift.Bool, paid: Swift.Bool, date: Foundation.Date)&gt;&gt;, registration_count: Swift.Optional&lt;Swift.Int&gt;, checked_in_attendees_count: Swift.Int, url: Swift.String)&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "SVSC"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/nathan/Documents/personal/SVSC/SVSC/WildApricotManager.swift"
+                  timestampString = "522646032.326222"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "198"
+                  endingLineNumber = "198"
+                  offsetFromSymbolStart = "38">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;__ObjC.URLResponse&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in closure #1 (() -&gt; ()) -&gt; () in closure #1 () -&gt; () in SVSC.WildApricotManager.downloadEvents((Swift.Array&lt;(id: Swift.Int, name: Swift.String, location: Swift.String, start_date: Foundation.Date, end_date: Foundation.Date, registration_enabled: Swift.Bool, registration_limit: Swift.Optional&lt;Swift.Int&gt;, registrations: Swift.Optional&lt;Swift.Array&lt;(event_id: Swift.Int, registration_type_id: Swift.Optional&lt;Swift.Int&gt;, contact_id: Swift.Int, checked_in: Swift.Bool, paid: Swift.Bool, date: Foundation.Date)&gt;&gt;, registration_count: Swift.Optional&lt;Swift.Int&gt;, checked_in_attendees_count: Swift.Int, url: Swift.String)&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "SVSC"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/nathan/Documents/personal/SVSC/SVSC/WildApricotManager.swift"
+                  timestampString = "522646032.328126"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "195"
+                  endingLineNumber = "195"
+                  offsetFromSymbolStart = "56">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SVSC/WildApricotManager.swift"
+            timestampString = "521942943.940356"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "199"
+            endingLineNumber = "199"
+            landmarkName = "unknown"
+            landmarkType = "0">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SVSC/WildApricotManager.swift"
+            timestampString = "521943138.450897"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "224"
+            endingLineNumber = "224"
+            landmarkName = "unknown"
+            landmarkType = "0">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SVSC/WildApricotManager.swift"
+            timestampString = "521943264.633936"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "223"
+            endingLineNumber = "223"
+            landmarkName = "unknown"
+            landmarkType = "0">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

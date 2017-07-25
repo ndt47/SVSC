@@ -206,20 +206,54 @@ class WildApricotManager : NSObject, URLSessionDelegate {
                     dateFormatter.locale = Locale(identifier: "en_US_POSIX")
                     dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
                     
-                    if let dict = try? JSONSerialization.jsonObject(with: d, options: JSONSerialization.ReadingOptions(rawValue: 0)) as? [String: AnyObject] {
-                        if let events = dict!["Events"] as? [[String: AnyObject]] {
-                            for event in events {
-                                guard let event_id = event["Id"] as? Int else {
+                    do {
+                        guard let dict = try JSONSerialization.jsonObject(with: d, options: JSONSerialization.ReadingOptions(rawValue: 0)) as? [String: Any] else {
+                            done()
+                            return
+                        }
+                        typealias EventDict = [String:Any]
+                        typealias EventSessionDict = [String:Any]
+                        guard let events = dict["Events"] as? [EventDict] else {
+                            done()
+                            return
+                        }
+                        
+                        for event in events {
+                            if let sessions = event["Sessions"] as? [EventSessionDict] {
+                                for session in sessions {
+                                    guard let event_id = session["Id"] as? Int, let name = session["Title"] as? String else {
+                                        continue
+                                    }
+                                    guard let start = dateFormatter.date(from: session["StartDate"] as! String), let end = dateFormatter.date(from: session["EndDate"] as! String) else {
+                                        continue
+                                    }
+                                    let clubEvent = ClubEvent(
+                                        id: event_id,
+                                        name: name,
+                                        location: event["Location"]! as! String,
+                                        start_date: start,
+                                        end_date: end,
+                                        registration_enabled: event["RegistrationEnabled"] as! Bool,
+                                        registration_limit: event["RegistrationsLimit"] as? Int,
+                                        registrations: nil,
+                                        registration_count: event["ConfirmedRegistrationsCount"] as? Int,
+                                        checked_in_attendees_count: event["CheckedInAttendeesNumber"] as! Int,
+                                        url: event["Url"] as! String
+                                    )
+                                    results.append(clubEvent)
+                                }
+                            }
+                            else {
+                                guard let event_id = event["Id"] as? Int, let name = event["Name"]! as? String else {
                                     continue
                                 }
                                 guard let start = dateFormatter.date(from: event["StartDate"] as! String), let end = dateFormatter.date(from: event["EndDate"] as! String) else {
                                     continue
                                 }
                                 
-                                
-                                var clubEvent = ClubEvent(
+                                let clubEvent = ClubEvent(
                                     id: event_id,
-                                    name: event["Name"]! as! String,
+                                    name: name,
                                     location: event["Location"]! as! String,
                                     start_date: start,
                                     end_date: end,
@@ -231,48 +265,14 @@ class WildApricotManager : NSObject, URLSessionDelegate {
                                     url: event["Url"] as! String
                                 )
                                 results.append(clubEvent)
-                                
-                                if clubEvent.registration_enabled && clubEvent.registration_count > 0 {
-                                    let registrations = [ClubEventRegistration]()
-                                    clubEvent.registrations = registrations
-                                    
-                                    var urlComponents = URLComponents(url: self.baseURL, resolvingAgainstBaseURL: false)
-                                    if let path = urlComponents?.path {
-                                        urlComponents?.path = path + "EventRegistrations"
-                                    }
-                                    urlComponents?.queryItems = [URLQueryItem(name: "eventID", value: String(clubEvent.id))]
-                                    
-                                    guard let url = urlComponents?.url else {
-                                        continue
-                                    }
-                                    
-                                    group.enter { (done) -> Void in
-                                        let task = session.dataTask(with: URLRequest(url: url), completionHandler: { (data, response, error) -> Void in
-                                            
-                                            guard let d = data, let _ = try? JSONSerialization.jsonObject(with: d, options: JSONSerialization.ReadingOptions(rawValue: 0)) as? [[String: AnyObject]] else {
-                                                done()
-                                                return
-                                            }
-                                            
-//                                            for reg in json {
-//                                                let registration = ClubEventRegistration(
-//                                                    event_id: clubEvent.id,
-//                                                    registration_type_id: (reg["RegistrationType"] as! [String: AnyObject])["Id"] as! Int,
-//                                                    contact_id:
-//                                                    date: dateFormatter.dateFromString(reg["RegistrationDate"])!
-//                                                )
-//                                            }
-                                            print("\(String(describing: dict))")
-                                            
-                                            done()
-                                        })
-                                        task.resume()
-                                    }
-                                }
                             }
                         }
-
                     }
+                    catch {
+                        done()
+                        return
+                    }
+
                     done()
                 })
                 task.resume()
@@ -288,5 +288,62 @@ class WildApricotManager : NSObject, URLSessionDelegate {
     
     func URLSession(_ session: Foundation.URLSession, dataTask: URLSessionDataTask, didReceiveData data: Data) {
     }
-
+    
+//    func downloadRegistrations(event: ClubEvent) {
+//
+//        if let  {
+//            for event in events {
+//                if let sessions = event["Sessions"]! as? [String:Any] {
+//                    for session in sessions {
+//
+//                    }
+//                }
+//                else {
+//                }
+//
+//
+//
+//
+//
+//                if clubEvent.registration_enabled && clubEvent.registration_count > 0 {
+//                    let registrations = [ClubEventRegistration]()
+//                    clubEvent.registrations = registrations
+//
+//                    var urlComponents = URLComponents(url: self.baseURL, resolvingAgainstBaseURL: false)
+//                    if let path = urlComponents?.path {
+//                        urlComponents?.path = path + "EventRegistrations"
+//                    }
+//                    urlComponents?.queryItems = [URLQueryItem(name: "eventID", value: String(clubEvent.id))]
+//
+//                    guard let url = urlComponents?.url else {
+//                        continue
+//                    }
+//
+//                    group.enter { (done) -> Void in
+//                        let task = session.dataTask(with: URLRequest(url: url), completionHandler: { (data, response, error) -> Void in
+//
+//                            guard let d = data, let result = (try? JSONSerialization.jsonObject(with: d, options: JSONSerialization.ReadingOptions(rawValue: 0))) as? [String:Any] else {
+//                                done()
+//                                return
+//                            }
+//
+//                            //                                            for reg in json {
+//                            //                                                let registration = ClubEventRegistration(
+//                            //                                                    event_id: clubEvent.id,
+//                            //                                                    registration_type_id: (reg["RegistrationType"] as! [String: AnyObject])["Id"] as! Int,
+//                            //                                                    contact_id:
+//                            //                                                    date: dateFormatter.dateFromString(reg["RegistrationDate"])!
+//                            //                                                )
+//                            //                                            }
+//                            print("\(String(describing: events))")
+//
+//                            done()
+//                        })
+//                        task.resume()
+//                    }
+//                }
+//            }
+//        }
+//
+//    }
 }

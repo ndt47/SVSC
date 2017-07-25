@@ -1,9 +1,9 @@
 [submodule "CSwiftV"]
-	path = Submodules/CSwiftV
+	path = CSwiftV
 	url = https://github.com/Daniel1of1/CSwiftV.git
-[submodule "SQLite.swift"]
-	path = Submodules/SQLite.swift
-	url = https://github.com/stephencelis/SQLite.swift.git
 [submodule "Charts"]
-	path = Submodules/Charts
+	path = Charts
 	url = https://github.com/danielgindi/Charts.git
+[submodule "SQLite"]
+	path = SQLite
+	url = https://github.com/stephencelis/SQLite.swift.git

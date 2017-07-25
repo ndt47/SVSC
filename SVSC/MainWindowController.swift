@@ -110,13 +110,13 @@ class MainWindowController : NSWindowController {
             if let response = json {
                 let db = Database.sharedDatabase
                 db.importMembers(contacts: response)
-                
+
                 NotificationCenter.default.post(name: Notification.Name(rawValue: "MembersQueryDidChange"), object: self, userInfo: ["members" : db.allMembers()])
             }
         }
-//        waManager.downloadEvents { (events) -> Void in
-//            print("EVENTS \(events)")
-//        }
+        waManager.downloadEvents { (events) -> Void in
+            print("EVENTS \(events)")
+        }
     }
 
     @IBAction func importGateLogs(_ sender: AnyObject?) -> Void {
